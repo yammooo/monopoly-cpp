@@ -35,7 +35,7 @@ namespace dependency_injection
         }
 
         template <class T>
-        static T& get_service()
+        static T* get_service()
         {   
             auto name = typeid(T).name();
 
@@ -44,7 +44,7 @@ namespace dependency_injection
                 throw dependency_injection::ServiceNotRegisteredException();
             }
 
-            return *(std::static_pointer_cast<T>(_services[name]));
+            return (std::static_pointer_cast<T>(_services[name])).get();
         }
     };
 }

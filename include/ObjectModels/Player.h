@@ -10,9 +10,18 @@ namespace object_models
         private:
 
         int _id;
-        int _boardPosition;
+        int _position;
+        int _coins;
 
         public:
+
+        int id() { return _id; }
+        int position() { return _position; }
+        void position(int position) { _position = position; }
+        int coins() { return _coins; }
+
+        void credit(int coins);
+        void debit(int coins);
 
         bool is_valid();
     };

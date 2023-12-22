@@ -5,6 +5,7 @@
 #include "GameProcessor.h"
 #include "../DependencyInjection/ServiceProvider.h"
 #include "../ObjectModels/ActionInfo.h"
+#include "../ObjectModels/Result.h"
 
 namespace engine
 {
@@ -14,16 +15,19 @@ namespace engine
 
         int _nextId;
 
-        engine::GameRepository _repository;
-        engine::GameProcessor _processor;
+        engine::GameRepository* _repository;
+        engine::GameProcessor* _processor;
 
         public:
 
+        int value;
+
         GameContext();
+        GameContext(const engine::GameContext&);
+        
+        object_models::Result<object_models::GameInfo> create_game();
 
-        int create_game();
-
-        void play(int id, object_models::ActionInfo info);
+        object_models::Result<object_models::GameInfo> play(int id, object_models::ActionInfo info);
 
     };
 }

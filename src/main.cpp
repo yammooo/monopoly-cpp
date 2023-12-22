@@ -9,6 +9,7 @@
 #include "../include/ObjectModels/GameConfiguration.h"
 #include "../include/DependencyInjection/ServiceProvider.h"
 
+#include "../include/Engine/RandomContext.h"
 #include "../include/Engine/GameProcessor.h"
 #include "../include/Engine/GameRepository.h"
 
@@ -21,6 +22,7 @@ using namespace engine;
 void build_services()
 {
     ServiceProvider::register_service<GameRepository>();
+    ServiceProvider::register_service<RandomContext>();
     ServiceProvider::register_service<GameProcessor>();
     ServiceProvider::register_service<GameContext>();
 }
@@ -33,20 +35,19 @@ int main(int argc, char** argv)
 
     auto context = ServiceProvider::get_service<GameContext>();
 
-    auto game = context.create_game();
+    auto game_result = context.create_game();
 
-    auto success = Result<int>::Ok(10);
-    auto error = Result<int>::Error("This is a ugly error");
-
-    if (!success.isError())
+    if (!game_result.isError())
     {
         std::cout << "Success from success!" << std::endl;
     }
 
-    if (error.isError())
+    if (game_result.isError())
     {
-        std::cout << error.error() << std::endl;
+        std::cout << game_result.error() << std::endl;
     }
+
+    auto game = game_result.value();
 
     return 0;
 }

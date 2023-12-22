@@ -20,7 +20,7 @@ GameConfiguration GameConfiguration::_default = GameConfiguration(vector<Tile> {
 
 GameConfiguration GameConfiguration::get_default()
 {
-    return _default;
+	return _default;
 }
 
 GameConfiguration::GameConfiguration(vector<Tile> tiles, map<PaymentAction, map<TileCategory, int>> prices, int maxRound, int initialBalance, int startPrize, int playerNumber)

@@ -12,13 +12,27 @@ engine::GameContext::GameContext()
     _nextId = 0;
 }
 
-int engine::GameContext::create_game()
+engine::GameContext::GameContext(const engine::GameContext& other)
 {
-    auto id = _nextId++;
+    _repository = other._repository;
+    _processor = other._processor;
+    _nextId = other._nextId; 
+}
 
-    auto game = GameData(id, GameConfiguration::get_default());
+Result<GameInfo> engine::GameContext::create_game()
+{
+    try
+    {
+        auto id = _nextId++;
 
-    _repository.save_game(game);
+        auto game = GameData(id, GameConfiguration::get_default());
 
-    return id;
+        return Result<GameInfo>::Ok(GameInfo(id));
+    }
+    catch(const std::exception& e)
+    {
+        // TODO: Log exception
+    }
+    
+    return Result<GameInfo>::Error("Error while creating new game");
 }
