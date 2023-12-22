@@ -35,7 +35,7 @@ namespace dependency_injection
         }
 
         template <class T>
-        static T get_service()
+        static T& get_service()
         {   
             auto name = typeid(T).name();
 

@@ -6,35 +6,47 @@
 #include "../include/ObjectModels/GameBoard.h"
 #include "../include/ObjectModels/Player.h"
 #include "../include/ObjectModels/Tile.h"
+#include "../include/ObjectModels/GameConfiguration.h"
 #include "../include/DependencyInjection/ServiceProvider.h"
+
+#include "../include/Engine/GameProcessor.h"
+#include "../include/Engine/GameRepository.h"
+
+#include "../include/ObjectModels/Result.h"
 
 using namespace dependency_injection;
 using namespace object_models;
 using namespace engine;
 
+void build_services()
+{
+    ServiceProvider::register_service<GameRepository>();
+    ServiceProvider::register_service<GameProcessor>();
+    ServiceProvider::register_service<GameContext>();
+}
+
 int main(int argc, char** argv)
 {
-    GameBoard board {};
+    // Build services
 
-    //std::cout << typeid(&board).name() << std::endl;
-    //std::cout << object_models::GameBoard::name() << std::endl;
+    build_services();
 
-    //dependency_injection::ServiceProvider::register_service<object_models::GameBoard>();
-    //dependency_injection::ServiceProvider::register_service<object_models::GameBoard>();
+    auto context = ServiceProvider::get_service<GameContext>();
 
-    ServiceProvider::register_service<GameContext>(10);
+    auto game = context.create_game();
 
-    auto t = ServiceProvider::get_service<GameContext>();
+    auto success = Result<int>::Ok(10);
+    auto error = Result<int>::Error("This is a ugly error");
 
-    std::cout << t.getA() << std::endl;
+    if (!success.isError())
+    {
+        std::cout << "Success from success!" << std::endl;
+    }
 
-    //std::cout << t.get() << std::endl;
-
-//    dependency_injection::ServiceProvider::register_service("serv", ptr);
-
-//    auto result = dependency_injection::ServiceProvider::get_service<int>("serv");
-
-//    std::cout << result.get()[10] << std::endl;
+    if (error.isError())
+    {
+        std::cout << error.error() << std::endl;
+    }
 
     return 0;
 }

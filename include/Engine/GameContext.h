@@ -1,25 +1,29 @@
 #ifndef GAME_CONTEXT_H
 #define GAME_CONTEXT_H
 
+#include "GameRepository.h"
+#include "GameProcessor.h"
+#include "../DependencyInjection/ServiceProvider.h"
+#include "../ObjectModels/ActionInfo.h"
+
 namespace engine
 {
     class GameContext
     {
         private:
 
-        int _a;
+        int _nextId;
+
+        engine::GameRepository _repository;
+        engine::GameProcessor _processor;
 
         public:
 
-        GameContext(int a)
-        {
-            _a = a;
-        }
+        GameContext();
 
-        int getA()
-        {
-            return _a;
-        }
+        int create_game();
+
+        void play(int id, object_models::ActionInfo info);
 
     };
 }

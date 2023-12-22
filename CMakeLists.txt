@@ -6,5 +6,5 @@ include_directories(include)
 
 # add_library(${PROJECT_NAME} SHARED src/Book.cpp src/BookShelf.cpp src/Date.cpp)
 
-add_executable(main src/main.cpp src/ObjectModels/Player.cpp src/DependencyInjection/ServiceProvider.cpp)
+add_executable(main src/main.cpp src/Engine/GameProcessor.cpp src/Engine/GameRepository.cpp src/Engine/GameContext.cpp src/ObjectModels/GameData.cpp src/ObjectModels/Player.cpp src/DependencyInjection/ServiceProvider.cpp src/ObjectModels/GameConfiguration.cpp)
 # target_link_libraries(main ${PROJECT_NAME})
