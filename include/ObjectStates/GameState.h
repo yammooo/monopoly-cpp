@@ -5,7 +5,10 @@ namespace object_states
 {
     enum class GameState
     {
-        Undefined = 0
+        Undefined = 0,
+        ToStart = 1,
+        InProgress = 2,
+        Ended = 3
     };
 }
 

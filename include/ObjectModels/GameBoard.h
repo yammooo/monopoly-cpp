@@ -14,6 +14,7 @@ namespace object_models
         private:
         
         int _roundCount;
+        int _nextTurnPlayerIndex;
 
         std::vector<object_models::Player> _players;
         std::vector<object_models::Tile> _tiles;

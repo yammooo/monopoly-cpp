@@ -22,6 +22,9 @@ namespace object_models
         GameData(int id, object_models::GameConfiguration configuration);
 
         int id() { return _id; }
+
+        const object_models::GameConfiguration& configuration() const { return _configuration; }
+
     };
 }
 

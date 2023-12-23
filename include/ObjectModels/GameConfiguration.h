@@ -29,10 +29,10 @@ namespace object_models
         std::vector<object_models::Tile> tiles() { return _tiles; }; 
         std::map<object_models::PaymentAction, std::map<object_models::TileCategory, int>> prices() { return _prices; }
 
-        int maxRound() { return _maxRound; }
-        int initialBalance() { return _initialBalance; }
-        int startPrize() { return _startPrize; }
-        int playerNumber() { return _playerNumber; }
+        int maxRound() const { return _maxRound; }
+        int initialBalance() const { return _initialBalance; }
+        int startPrize() const { return _startPrize; }
+        int playerNumber() const { return _playerNumber; }
 
         GameConfiguration() {}
 

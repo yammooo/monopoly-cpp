@@ -27,7 +27,9 @@ Result<GameInfo> GameContext::create_game()
 
         auto game = GameData(id, GameConfiguration::get_default());
 
-        return Result<GameInfo>::Ok(GameInfo(id));
+        auto info = _processor->init_game(&game);
+
+        return Result<GameInfo>::Ok(info);
     }
     catch(const std::exception& e)
     {
