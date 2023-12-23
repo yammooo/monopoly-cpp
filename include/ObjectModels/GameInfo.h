@@ -1,6 +1,8 @@
 #ifndef GAME_RESULT_H
 #define GAME_RESULT_H
 
+#include "GameData.h"
+
 namespace object_models
 {
     class GameInfo
@@ -15,6 +17,7 @@ namespace object_models
 
         GameInfo() {}
         GameInfo(int id);
+        GameInfo(object_models::GameData game);
     };
 }
 

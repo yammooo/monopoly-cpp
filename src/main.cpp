@@ -2,22 +2,25 @@
 #include <memory>
 #include <typeinfo>
 
-#include "../include/Engine/GameContext.h"
-#include "../include/ObjectModels/GameBoard.h"
-#include "../include/ObjectModels/Player.h"
-#include "../include/ObjectModels/Tile.h"
-#include "../include/ObjectModels/GameConfiguration.h"
 #include "../include/DependencyInjection/ServiceProvider.h"
 
+#include "../include/Client/GameClient.h"
+
+#include "../include/Engine/GameContext.h"
 #include "../include/Engine/RandomContext.h"
 #include "../include/Engine/GameProcessor.h"
 #include "../include/Engine/GameRepository.h"
 
+#include "../include/ObjectModels/GameBoard.h"
+#include "../include/ObjectModels/Player.h"
+#include "../include/ObjectModels/Tile.h"
+#include "../include/ObjectModels/GameConfiguration.h"
 #include "../include/ObjectModels/Result.h"
 
 using namespace dependency_injection;
-using namespace object_models;
+using namespace client;
 using namespace engine;
+using namespace object_models;
 
 void build_services()
 {
@@ -25,6 +28,7 @@ void build_services()
     ServiceProvider::register_service<RandomContext>();
     ServiceProvider::register_service<GameProcessor>();
     ServiceProvider::register_service<GameContext>();
+    ServiceProvider::register_service<GameClient>();
 }
 
 int main(int argc, char** argv)
@@ -33,21 +37,16 @@ int main(int argc, char** argv)
 
     build_services();
 
-    auto context = ServiceProvider::get_service<GameContext>();
-
-    auto game_result = context.create_game();
-
-    if (!game_result.isError())
+    try
     {
-        std::cout << "Success from success!" << std::endl;
+        ServiceProvider::get_service<GameClient>()->execute();
+        
+        return 0;
     }
-
-    if (game_result.isError())
+    catch(const std::exception& e)
     {
-        std::cout << game_result.error() << std::endl;
+        std::cerr << e.what() << '\n';
     }
-
-    auto game = game_result.value();
-
-    return 0;
+    
+    return -1;
 }

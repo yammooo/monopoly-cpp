@@ -3,9 +3,9 @@
 using namespace object_models;
 using namespace dependency_injection;
 
-GameInfo engine::GameProcessor::process(GameData game, ActionInfo action)
+GameInfo engine::GameProcessor::process(GameData* game, ActionInfo action)
 {
-    return GameInfo(game.id());
+    return GameInfo(game->id());
 }
 
 engine::GameProcessor::GameProcessor()

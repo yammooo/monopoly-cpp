@@ -4,7 +4,7 @@ using namespace engine;
 using namespace object_models;
 using namespace dependency_injection;
 
-engine::GameContext::GameContext()
+GameContext::GameContext()
 {
     _repository = ServiceProvider::get_service<GameRepository>();
     _processor = ServiceProvider::get_service<GameProcessor>();
@@ -12,14 +12,14 @@ engine::GameContext::GameContext()
     _nextId = 0;
 }
 
-engine::GameContext::GameContext(const engine::GameContext& other)
+GameContext::GameContext(const GameContext& other)
 {
     _repository = other._repository;
     _processor = other._processor;
     _nextId = other._nextId; 
 }
 
-Result<GameInfo> engine::GameContext::create_game()
+Result<GameInfo> GameContext::create_game()
 {
     try
     {
@@ -33,6 +33,26 @@ Result<GameInfo> engine::GameContext::create_game()
     {
         // TODO: Log exception
     }
-    
+     
     return Result<GameInfo>::Error("Error while creating new game");
+}
+
+Result<GameInfo> GameContext::play(int id, ActionInfo info)
+{
+    try
+    {
+        auto game = _repository->get_game(id);
+
+        auto result = _processor->process(&game, info);
+
+        _repository->save_game(game);
+
+        return Result<GameInfo>::Ok(result);
+    }
+    catch(const std::exception& e)
+    {
+        // TODO: Log exception
+    }
+    
+    return Result<GameInfo>::Error("Error while performing action on game");
 }

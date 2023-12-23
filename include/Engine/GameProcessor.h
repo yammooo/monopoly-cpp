@@ -19,8 +19,7 @@ namespace engine
 
         GameProcessor();
 
-        object_models::GameInfo process(object_models::GameData game, object_models::ActionInfo action);
-
+        object_models::GameInfo process(object_models::GameData* game, object_models::ActionInfo action);
     };
 }
 
