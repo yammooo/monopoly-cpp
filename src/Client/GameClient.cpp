@@ -11,4 +11,5 @@ client::GameClient::GameClient()
 
 void client::GameClient::execute()
 {
+    _context->create_game();
 }

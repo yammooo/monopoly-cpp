@@ -14,16 +14,21 @@ namespace object_models
         private:
         
         int _roundCount;
-        int _nextTurnPlayerIndex;
+
+        std::vector<int> _playerTurns;
 
         std::vector<object_models::Player> _players;
         std::vector<object_models::Tile> _tiles;
 
         object_states::GameState _state;
         
-        int _nextTurnPlayerId;
-
         public:
+
+        void playerTurns(const std::vector<int>& turns) { _playerTurns = turns; }
+        
+        void players(const std::vector<Player>& players) { _players = players; }
+        object_models::Player* player(int i) { return &_players[i]; } 
+
 
     };
 }

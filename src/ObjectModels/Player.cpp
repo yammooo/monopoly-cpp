@@ -1,5 +1,12 @@
 #include "../../include/ObjectModels/Player.h"
 
+object_models::Player::Player(int id, int position, int coins)
+{
+    _id = id;
+    _position = position;
+    _coins = coins;
+}
+
 bool object_models::Player::is_valid()
 {
     return _id >= 0 && _position >= 0;

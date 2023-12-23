@@ -15,6 +15,8 @@ namespace object_models
 
         public:
 
+        Player(int id, int position, int coins);
+
         int id() { return _id; }
         int position() { return _position; }
         void position(int position) { _position = position; }

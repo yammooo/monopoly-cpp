@@ -1,11 +1,18 @@
 #ifndef GAME_PROCESSOR_H
 #define GAME_PROCESSOR_H
 
+#include <map>
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
 #include "RandomContext.h"
 #include "../DependencyInjection/ServiceProvider.h"
 #include "../ObjectModels/GameData.h"
 #include "../ObjectModels/ActionInfo.h"
 #include "../ObjectModels/GameInfo.h"
+#include "../ObjectModels/Player.h"
 
 namespace engine
 {
