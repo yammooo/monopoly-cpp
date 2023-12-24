@@ -25,9 +25,13 @@ Result<GameInfo> GameContext::create_game()
     {
         auto id = _nextId++;
 
-        auto game = GameData(id, GameConfiguration::get_default());
+        // MEMORY LEAK OH MY GOD
 
-        auto info = _processor->init_game(&game);
+        auto game = new GameData(id, GameConfiguration::get_default());
+
+        auto info = _processor->init_game(game);
+        
+        _repository->save_game(*game);
 
         return Result<GameInfo>::Ok(info);
     }
@@ -36,6 +40,26 @@ Result<GameInfo> GameContext::create_game()
         // TODO: Log exception
     }
      
+    return Result<GameInfo>::Error("Error while creating new game");
+}
+
+Result<GameInfo> GameContext::create_game(GameConfiguration configuration)
+{
+    try
+    {
+        auto id = _nextId++;
+
+        auto game = GameData(id, configuration);
+
+        auto info = _processor->init_game(&game);
+
+        return Result<GameInfo>::Ok(info);
+    }
+    catch (const std::exception& e)
+    {
+        // TODO: Log exception
+    }
+
     return Result<GameInfo>::Error("Error while creating new game");
 }
 

@@ -3,6 +3,7 @@
 
 #include <map>
 #include "../ObjectModels/GameData.h"
+#include "../ObjectModels/PlayerData.h"
 
 namespace engine
 {

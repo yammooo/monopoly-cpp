@@ -2,6 +2,7 @@
 
 using namespace object_models;
 using namespace dependency_injection;
+using namespace object_states;
 
 std::vector<int> find_keys(const std::map<int, int>& inputMap)
 {
@@ -44,45 +45,34 @@ std::vector<int> get_keys(const std::map<int, int>& inputMap)
     return keys;
 }
 
-GameInfo handle_passed_start_action(GameData* game, ActionInfo action)
+GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::RandomContext* random)
 {
+    if (action.type() != ActionType::ThrowDice)
+    {
+        throw std::exception();
+    }
+
+    auto dice_result = random->get_next(1, 6) + random->get_next(1, 6);
+
     return GameInfo(game->id());
 }
 
 GameInfo engine::GameProcessor::process(GameData* game, ActionInfo action)
 {
-    switch (action.type()) {
-        case object_models::ActionType::PassedStart:
-            return handle_passed_start_action(game, action);
-        case object_models::ActionType::DiceRoll:
-            //handle_dice_roll_action(game, action);
-            break;
-        case object_models::ActionType::LandedOn:
-            //handle_landed_on_action(game, action);
-            break;
-        case object_models::ActionType::Payment:
-            //handle_payment_action(game, action);
-            break;
-        case object_models::ActionType::EndedTurn:
-            //handle_ended_turn_action(game, action);
-            break;
-        case object_models::ActionType::Eliminated:
-            //handle_eliminated_action(game, action);
-            break;
-        case object_models::ActionType::Won:
-            //handle_won_action(game, action);
-            break;
+    switch (game->board()->state())
+    {
+        case GameState::PlayerDiceThrow:
+            return process_player_dice_throw(game, action, _random);
         default:
-            //handle_unknown_action(game, action);
             break;
     }
 
-    return GameInfo(game->id());
+    return GameInfo(*game);
 }
 
 object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData* game)
 {
-    int playerNumber = game->configuration().playerNumber();
+    int playerNumber = game->configuration().player_number();
 
     std::map<int, int> pointsByPlayer;
 
@@ -106,18 +96,18 @@ object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData
 
     auto sortedPlayers = get_keys(pointsByPlayer);
 
-    game->board().playerTurns(sortedPlayers);
+    game->board()->player_turns(sortedPlayers);
 
-    std::vector<Player> new_players {};
+    std::vector<PlayerData> new_players {};
 
     for (int i = 0; i < playerNumber; i++)
     {
-        new_players.push_back(Player(i, 0, game->configuration().initialBalance()));
+        new_players.push_back(PlayerData(i, 0, game->configuration().initial_balance()));
     }
 
-    game->board().players(new_players);
+    game->board()->players(new_players);
 
-    return GameInfo(1);
+    return GameInfo(*game);
 };
 
 engine::GameProcessor::GameProcessor()

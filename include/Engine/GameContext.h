@@ -26,6 +26,7 @@ namespace engine
         GameContext(const engine::GameContext&);
         
         object_models::Result<object_models::GameInfo> create_game();
+        object_models::Result<object_models::GameInfo> create_game(object_models::GameConfiguration configuration);
 
         object_models::Result<object_models::GameInfo> play(int id, object_models::ActionInfo info);
     };

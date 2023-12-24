@@ -23,7 +23,7 @@ namespace object_models
 
         int id() { return _id; }
 
-        object_models::GameBoard board() { return _board; }
+        object_models::GameBoard* board() { return &_board; }
         const object_models::GameConfiguration& configuration() const { return _configuration; }
 
     };

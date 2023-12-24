@@ -11,8 +11,9 @@
 #include "../DependencyInjection/ServiceProvider.h"
 #include "../ObjectModels/GameData.h"
 #include "../ObjectModels/ActionInfo.h"
+#include "../ObjectStates/GameState.h"
 #include "../ObjectModels/GameInfo.h"
-#include "../ObjectModels/Player.h"
+#include "../ObjectModels/PlayerData.h"
 
 namespace engine
 {
