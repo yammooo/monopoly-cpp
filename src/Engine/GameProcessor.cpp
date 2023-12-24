@@ -44,8 +44,38 @@ std::vector<int> get_keys(const std::map<int, int>& inputMap)
     return keys;
 }
 
+GameInfo handle_passed_start_action(GameData* game, ActionInfo action)
+{
+    return GameInfo(game->id());
+}
+
 GameInfo engine::GameProcessor::process(GameData* game, ActionInfo action)
 {
+    switch (action.type()) {
+        case object_models::ActionType::PassedStart:
+            return handle_passed_start_action(game, action);
+        case object_models::ActionType::DiceRoll:
+            //handle_dice_roll_action(game, action);
+            break;
+        case object_models::ActionType::LandedOn:
+            //handle_landed_on_action(game, action);
+            break;
+        case object_models::ActionType::Payment:
+            //handle_payment_action(game, action);
+            break;
+        case object_models::ActionType::EndedTurn:
+            //handle_ended_turn_action(game, action);
+            break;
+        case object_models::ActionType::Eliminated:
+            //handle_eliminated_action(game, action);
+            break;
+        case object_models::ActionType::Won:
+            //handle_won_action(game, action);
+            break;
+        default:
+            //handle_unknown_action(game, action);
+            break;
+    }
 
     return GameInfo(game->id());
 }

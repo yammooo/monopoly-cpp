@@ -16,6 +16,8 @@ namespace object_models
         int _ownerId;
 
         public:
+
+        Tile(TileCategory category, TileHousing housing);
         
     };
 
