@@ -7,6 +7,8 @@ namespace object_models
     {
         Undefined = 0,
         ThrowDice = 2,
+        AcceptPayment = 3,
+        DenyPayment = 4
     };
 }
 

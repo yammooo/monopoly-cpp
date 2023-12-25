@@ -33,6 +33,8 @@ namespace object_models
         int initial_balance() const { return _initialBalance; }
         int start_prize() const { return _startPrize; }
         int player_number() const { return _playerNumber; }
+        int board_size() const { return _tiles.size(); }
+        int get_prize(object_models::PaymentAction action, object_models::TileCategory category) const { return _prices.at(action).at(category); }
 
         GameConfiguration() {}
 

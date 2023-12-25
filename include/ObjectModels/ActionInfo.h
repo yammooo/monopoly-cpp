@@ -12,16 +12,15 @@ namespace object_models
 
         ActionType _type;
         PaymentAction _paymentAction;
-        int _playerId;
         
         public:
 
         ActionInfo() { }
-        ActionInfo(ActionType type, PaymentAction paymentAction, int playerId);
+        ActionInfo(ActionType type);
+        ActionInfo(ActionType type, PaymentAction paymentAction);
 
         ActionType type() const { return _type; }
         PaymentAction payment_action() const { return _paymentAction; }
-        int player_id() const { return _playerId; }        
     };
 }
 

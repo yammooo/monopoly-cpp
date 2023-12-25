@@ -24,6 +24,8 @@ namespace object_models
         void position(int position) { _position = position; }
         int coins() { return _coins; }
 
+        bool is_in_game() { return _coins > 0; }
+
         void credit(int coins);
         void debit(int coins);
 

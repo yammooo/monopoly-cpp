@@ -17,6 +17,13 @@ namespace object_models
 
         public:
 
+        object_models::TileCategory category() { return _category; }
+        object_models::TileHousing housing() { return _housing; }
+        void housing(object_models::TileHousing housing) { _housing = housing; }
+
+        int owner_id() { return _ownerId; }
+        void set_property(int ownerId) { _ownerId = ownerId; }
+
         Tile(TileCategory category, TileHousing housing);
         
     };

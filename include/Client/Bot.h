@@ -3,16 +3,25 @@
 
 #include "../Interfaces/IPlayer.h"
 
+#include "../Engine/RandomContext.h"
+#include "../DependencyInjection/ServiceProvider.h"
+
 namespace client
 {
 	class Bot : public interfaces::IPlayer
 	{
-	private:
+		private:
 
-	public:
+		engine::RandomContext* _random;
 
-		object_models::ActionInfo get_action(object_models::GameInfo info) { return object_models::ActionInfo(); }
+		public:
 
+		Bot()
+		{
+			_random = dependency_injection::ServiceProvider::get_service<engine::RandomContext>();
+		}
+
+		object_models::ActionInfo get_action(object_models::GameInfo info);
 	};
 }
 

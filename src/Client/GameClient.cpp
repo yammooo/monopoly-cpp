@@ -23,7 +23,14 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 
         action = _players[player_index]->get_action(info);
 
-        // _context->play(info.id(), action);
+        auto result = _context->play(info.id(), action);
+
+        if (result.isError())
+        {
+            // Todo fai qualcosa
+        }
+
+        info = result.value();
     }
 }
 

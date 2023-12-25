@@ -28,6 +28,8 @@ namespace object_models
 
         GameBoard(const std::vector<object_models::Tile>& tiles, const std::vector<object_models::PlayerData>& players);
 
+        object_models::Tile& tile(int id) { return _tiles[id]; }
+
         std::vector<int> player_turns() { return _playerTurns; }
         void player_turns(const std::vector<int>& turns) { _playerTurns = turns; }
         
