@@ -30,7 +30,7 @@ ActionInfo Bot::get_action(GameInfo info)
 		}
 		default:
 		{
-
+			throw std::exception();
 			break;
 		}
 	}

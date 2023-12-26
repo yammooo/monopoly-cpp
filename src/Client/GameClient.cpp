@@ -27,7 +27,7 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 
         if (result.isError())
         {
-            // Todo fai qualcosa
+            // TODO fai qualcosa
         }
 
         info = result.value();

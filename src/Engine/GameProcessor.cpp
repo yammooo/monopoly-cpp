@@ -52,6 +52,20 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         throw std::exception();
     }
 
+    int players_in_game = 0;
+    for(int i = 0; i < game->board()->get_player_number(); i++)
+    {
+        if(game->board()->player(i)->is_in_game())
+        {
+            players_in_game++;
+        }
+    }
+    if(players_in_game == 1)
+    {
+        game->board()->state(GameState::Ended);
+        return GameInfo(*game);
+    }
+
     auto player_index = game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number());
 
     if (!game->board()->player(player_index)->is_in_game())
@@ -61,11 +75,17 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         return GameInfo(*game);
     }
 
+    std::cout << "Player " << player_index << " is throwing dice\n";
+
     auto dice_result = random->get_next(1, 6) + random->get_next(1, 6);
+
+    std::cout << "Player " << player_index << " rolled a " << dice_result << "\n";
 
     auto old_position = game->board()->player(player_index)->position();
 
     auto new_position = (old_position + dice_result) % game->configuration().board_size();
+
+    std::cout << "Player " << player_index << " moved from " << old_position << " to " << new_position << "\n";
 
     game->board()->player(player_index)->position(new_position);
 
@@ -79,30 +99,40 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     auto tile_category = tile.category();
 
     if (tile_category == TileCategory::Corner || tile_category == TileCategory::Start)
-    {
+    {   
         game->board()->next_round();
     }
-    
-    if (tile_category == TileCategory::Cheap || tile_category == TileCategory::Standard || tile_category == TileCategory::Luxury)
-    {
+    else if (tile_category == TileCategory::Cheap || tile_category == TileCategory::Standard || tile_category == TileCategory::Luxury)
+    {   
+        // If the tile is not owned by anyone
         if (tile.owner_id() == -1)
         {
             auto buy_price = game->configuration().get_prize(PaymentAction::BuyLand, tile_category);
 
+            std::cout << "Player " << player_index << " can buy a tile for " << buy_price << "\n";
+            
+            // If the player has enough coins
             if (game->board()->player(player_index)->coins() >= buy_price)
             {
                 game->board()->state(GameState::PlayerPayment);
             }
         }
         else
-        {
+        {   
+            // If the player is the owner of the tile and the tile is not a hotel
             if (player_index == tile.owner_id())
-            {
-                if (tile.housing() < TileHousing::Hotel)
-                {
+            {   
+                auto upgrade_cost = game->configuration().get_prize(tile.housing() == TileHousing::Land ? PaymentAction::BuyHouse : PaymentAction::BuyHotel, tile.category());
+                
+                // Check if the player has enough coins for the upgrade and the current housing is not a Hotel (since a Hotel is the highest upgrade)
+                if ((game->board()->player(player_index)->coins() >= upgrade_cost) && (tile.housing() < TileHousing::Hotel))
+                {   
+                    std::cout << "Player " << player_index << " can upgrade the tile.\n";
                     game->board()->state(GameState::PlayerPayment);
                 }
+
             }
+            // If the player is not the owner of the tile and the tile is not a land
             else if (tile.housing() == TileHousing::House || tile.housing() == TileHousing::Hotel)
             {
                 auto payment_action = tile.housing() == TileHousing::House ? PaymentAction::HouseStay : PaymentAction::HotelStay;
@@ -136,7 +166,16 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                     game->board()->next_round();
                 }
             }
+            // If the player is not the owner of the tile and the tile is a land
+            else
+            {
+                game->board()->next_round();
+            }
         }
+    }
+    else
+    {
+        throw std::exception();
     }
 
     return GameInfo(*game);
@@ -149,8 +188,11 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
         throw std::exception();
     }
 
+    std::cout << "Processing payment...\n";
+
     if (action.type() == ActionType::DenyPayment)
-    {
+    {   
+        std::cout << "Player " << game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number()) << " denied the payment.\n";
         game->board()->next_round();
         game->board()->state(GameState::PlayerDiceThrow);
 
@@ -176,15 +218,21 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
             if (tile.owner_id() == player_index)
             {
                 game->board()->tile(player_position).housing(TileHousing::House);
+                std::cout << "Player " << player_index << " bought a house.\n";
+            } else {
+                game->board()->tile(player_position).set_property(player_index);
+                std::cout << "Player " << player_index << " bought a land.\n";
             }
             break;
         }
         case TileHousing::House:
         {
             game->board()->tile(player_position).housing(TileHousing::Hotel);
+            std::cout << "Player " << player_index << " upgraded to a hotel.\n";
             break;
         }
         default:
+            throw std::exception();
             break;
     }
 
