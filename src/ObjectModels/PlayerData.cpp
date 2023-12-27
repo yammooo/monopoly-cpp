@@ -31,5 +31,5 @@ void object_models::PlayerData::credit(int coins)
         throw "error";
     }
 
-    _coins -= coins;
+    _coins += coins;
 }

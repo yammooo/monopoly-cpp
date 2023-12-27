@@ -19,7 +19,7 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 
     while (info.state() != GameState::Ended)
     {
-        player_index = info.player_turns().at(info.round() % info.player_number());
+        player_index = 0; // ---> new! info.current_turn(); ---> OLD // player_turns().at(info.round() % info.player_number());
 
         action = _players[player_index]->get_action(info);
 
@@ -32,6 +32,8 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 
         info = result.value();
     }
+
+    std::cout << "The winner is player " << info.winner() << std::endl;
 }
 
 client::GameClient::GameClient()

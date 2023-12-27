@@ -27,11 +27,13 @@ Result<GameInfo> GameContext::create_game()
     {
         auto id = _nextId++;
 
-        std::unique_ptr<GameData> game(new GameData(id, GameConfiguration::get_default()));
+        auto game = new GameData(id, GameConfiguration::get_default());
 
-        auto info = _processor->init_game(game.get());
+        auto info = _processor->init_game(game);
         
         _repository->save_game(*game);
+
+        delete game;
 
         return Result<GameInfo>::Ok(info);
     }

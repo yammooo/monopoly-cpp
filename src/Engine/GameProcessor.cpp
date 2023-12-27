@@ -106,6 +106,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     if (new_position < old_position)
     {
         game->board()->player(player_index)->credit(game->configuration().start_prize());
+        std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
     }
 
     auto tile = game->board()->tile(new_position);
@@ -158,6 +159,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                 auto payment = game->configuration().get_prize(payment_action, tile.category());
 
                 game->board()->player(player_index)->debit(payment);
+                std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
 
                 auto player_coins = game->board()->player(player_index)->coins();
 
@@ -172,6 +174,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                 if (player_coins < 0)
                 {
                     std::cout << "Player " << player_index << " is bankrupt.\n";
+                    std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
 
                     if(is_game_ended(game))
                     {

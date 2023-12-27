@@ -13,4 +13,5 @@ object_models::GameInfo::GameInfo(object_models::GameData game)
     _state = game.board()->state();
     _round = game.board()->round();
     _playerTurns = game.board()->player_turns();
+    _winner = game.board()->winner();
 }

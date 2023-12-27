@@ -16,6 +16,7 @@ namespace object_models
 
         int _playerNumber;
         std::vector<int> _playerTurns;
+        int _winner;
 
         public:
 
@@ -23,6 +24,8 @@ namespace object_models
         int player_number() { return _playerNumber; }
         int round() { return _round; }
         std::vector<int> player_turns() { return _playerTurns; }
+
+        int winner() const { return _winner; }
 
         object_states::GameState state() { return _state; }
         void state(object_states::GameState state) { _state = state; }

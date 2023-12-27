@@ -11,3 +11,24 @@ GameBoard::GameBoard(const std::vector<Tile>& tiles, const std::vector<PlayerDat
     _tiles = tiles;
     _players = players;
 }
+
+int object_models::GameBoard::winner()
+{
+    if (_state != GameState::Ended)
+    {
+        return -1;
+    }
+
+    int index = -1;
+
+    for each (auto player in _players)
+    {
+        if (player.coins() > 0)
+        {
+            index = player.id();
+            break;
+        }
+    }
+
+    return index;
+}

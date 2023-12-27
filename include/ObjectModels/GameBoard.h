@@ -36,6 +36,8 @@ namespace object_models
         int round() { return _roundCount; }
         void next_round() { _roundCount++; }
 
+        int winner();
+
         int get_player_number() { return _players.size(); }
 
         void players(const std::vector<PlayerData>& players) { _players = players; }
