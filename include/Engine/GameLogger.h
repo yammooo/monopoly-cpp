@@ -18,7 +18,7 @@ namespace engine
 
 		void print(const std::string& str) const
 		{
-			for each (auto stream in _streams)
+			for (auto stream : _streams)
 			{
 				(*stream) << str << std::endl;
 			}

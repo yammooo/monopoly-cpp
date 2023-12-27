@@ -73,7 +73,7 @@ GameConfiguration GameConfiguration::_default = GameConfiguration(
   },
   100,
   100,
-  5,
+  2,
   4
 );
 

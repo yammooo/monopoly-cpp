@@ -89,7 +89,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     std::cout << "\nTotal: " << players_in_game << "\n";
 
 
-    std::cout << "Player " << player_index << " is throwing dice\n";
+    std::cout << "Player " << player_index << " is throwing dice and has " << game->board()->player(player_index)->coins() << " coins.\n";
 
     auto dice_result = random->get_next(1, 6) + random->get_next(1, 6);
 
@@ -122,7 +122,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         // If the tile is not owned by anyone
         if (tile.owner_id() == -1)
         {
-            std::cout << "Player " << player_index << " is on a tile that is not owned.\n";
+            std::cout << "Player " << player_index << " is on a tile that is not owned by anyone.\n";
             auto buy_price = game->configuration().get_prize(PaymentAction::BuyLand, tile_category);
             
             // If the player has enough coins
@@ -130,21 +130,35 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
             {
                 std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can buy a tile for " << buy_price << "\n";
                 game->board()->state(GameState::PlayerPayment);
+            } else {
+                std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can't buy a tile for " << buy_price << "\n";
+                game->board()->next_round();
             }
         }
+        // If the tile is owned by someone
         else
-        {   
-            // If the player is the owner of the tile and the tile is not a hotel
+        {
+            // If the player is the owner of the tile
             if (player_index == tile.owner_id())
-            {   
+            {
                 std::cout << "Player " << player_index << " is on a tile that is owned by him.\n";
-                auto upgrade_cost = game->configuration().get_prize(tile.housing() == TileHousing::Land ? PaymentAction::BuyHouse : PaymentAction::BuyHotel, tile.category());
+                auto upgrade_cost = game->configuration().get_prize(tile.housing() == TileHousing::Land ? PaymentAction::BuyHouse : PaymentAction::BuyHotel, tile_category);
                 
                 // Check if the player has enough coins for the upgrade and the current housing is not a Hotel (since a Hotel is the highest upgrade)
-                if ((game->board()->player(player_index)->coins() >= upgrade_cost) && (tile.housing() < TileHousing::Hotel))
+                if ((game->board()->player(player_index)->coins() >= upgrade_cost) && (tile.housing() == TileHousing::House || tile.housing() == TileHousing::Land))
                 {
-                    std::cout << "Player " << player_index << " can upgrade the tile.\n";
+                    std::cout << "Player " << player_index << " can upgrade the tile because he has " << game->board()->player(player_index)->coins() << " coins.\n";
                     game->board()->state(GameState::PlayerPayment);
+                }
+                else if (tile.housing() == TileHousing::Hotel)
+                {
+                    std::cout << "Player " << player_index << " can't upgrade the tile because it is already an hotel.\n";
+                    game->board()->next_round();
+                }
+                else
+                {
+                    std::cout << "Player " << player_index << " can't upgrade the tile because he has " << game->board()->player(player_index)->coins() << " coins.\n";
+                    game->board()->next_round();
                 }
 
             }
@@ -169,12 +183,10 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                 }
 
                 game->board()->player(tile.owner_id())->credit(payment);
-                std::cout << "Player " << player_index << " coins: " << player_coins << "\n";
 
                 if (player_coins < 0)
                 {
                     std::cout << "Player " << player_index << " is bankrupt.\n";
-                    std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
 
                     if(is_game_ended(game))
                     {
@@ -190,14 +202,13 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                             game->board()->tile(i).housing(TileHousing::Land);
                         }
                     }
-
-                    game->board()->next_round();
                 }
+                game->board()->next_round();
             }
             // If the player is not the owner of the tile and the tile is a land
             else
             {   
-                std::cout << "Player " << player_index << " is on a tile that is owned by someone else.\n";
+                std::cout << "Player " << player_index << " is on a land tile that is owned by someone else.\n";
                 game->board()->next_round();
             }
         }
@@ -234,30 +245,36 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
     auto tile = game->board()->tile(player_position);
 
-    auto payment_action = tile.housing() == TileHousing::Land ? PaymentAction::BuyLand : tile.housing() == TileHousing::House ? PaymentAction::BuyHouse : PaymentAction::BuyHotel;
-
-    auto price = game->configuration().get_prize(payment_action, tile.category());
-
-    game->board()->player(player_index)->debit(price);
-
     switch (tile.housing())
     {
         case TileHousing::Land:
         {
             if (tile.owner_id() == player_index)
             {
+                auto payment = game->configuration().get_prize(PaymentAction::BuyHouse, tile.category());
+                game->board()->player(player_index)->debit(payment);
+
                 game->board()->tile(player_position).housing(TileHousing::House);
-                std::cout << "Player " << player_index << " bought a house.\n";
+
+                std::cout << "Player " << player_index << " upgraded to an house and has now " << game->board()->player(player_index)->coins() << " coins.\n";
             } else {
+                auto payment = game->configuration().get_prize(PaymentAction::BuyLand, tile.category());
+                game->board()->player(player_index)->debit(payment);
+                
                 game->board()->tile(player_position).set_property(player_index);
-                std::cout << "Player " << player_index << " bought a land.\n";
+
+                std::cout << "Player " << player_index << " bought a land and has now " << game->board()->player(player_index)->coins() << " coins.\n";
             }
             break;
         }
         case TileHousing::House:
-        {
+        {   
+            auto payment = game->configuration().get_prize(PaymentAction::BuyHotel, tile.category());
+            game->board()->player(player_index)->debit(payment);
+
             game->board()->tile(player_position).housing(TileHousing::Hotel);
-            std::cout << "Player " << player_index << " upgraded to a hotel.\n";
+
+            std::cout << "Player " << player_index << " upgraded to an hotel and has now " << game->board()->player(player_index)->coins() << " coins.\n";
             break;
         }
         default:

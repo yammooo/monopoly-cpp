@@ -21,7 +21,7 @@ int object_models::GameBoard::winner()
 
     int index = -1;
 
-    for each (auto player in _players)
+    for (auto player : _players)
     {
         if (player.coins() > 0)
         {
