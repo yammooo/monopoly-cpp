@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "../../include/Engine/GameContext.h"
 
 using namespace engine;
@@ -25,13 +27,11 @@ Result<GameInfo> GameContext::create_game()
     {
         auto id = _nextId++;
 
-        auto game = new GameData(id, GameConfiguration::get_default());
+        std::unique_ptr<GameData> game(new GameData(id, GameConfiguration::get_default()));
 
-        auto info = _processor->init_game(game);
+        auto info = _processor->init_game(game.get());
         
         _repository->save_game(*game);
-
-        delete game;
 
         return Result<GameInfo>::Ok(info);
     }

@@ -17,7 +17,7 @@ ActionInfo Bot::get_action(GameInfo info)
 		{
 			auto result = _random->get_next(1, 100);
 
-			if (result <= 25)
+			if (result <= 100)
 			{
 				return ActionInfo(ActionType::AcceptPayment);
 			}
