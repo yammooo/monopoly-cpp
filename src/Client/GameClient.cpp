@@ -17,13 +17,15 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
     ActionInfo action;
     int player_index;
 
-    while (info.state() != GameState::Ended)
+    while (info.state() != GameState::Ended) // while che fa andare tutta la simulazione
     {
         player_index = 0; // ---> new! info.current_turn(); ---> OLD // player_turns().at(info.round() % info.player_number());
 
-        action = _players[player_index]->get_action(info);
+        action = _players[player_index]->get_action(info);  // passi al player le informazioni del gioco e gli chiedi cosa vuole fare
 
-        auto result = _context->play(info.id(), action);
+        auto result = _context->play(info.id(), action); // vai sul context e fai un'azione 
+
+        //qua stampo i log --- ma auto result gioca solo 1 turno? cosa fa? 
 
         if (result.isError())
         {

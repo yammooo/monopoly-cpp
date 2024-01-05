@@ -2,6 +2,7 @@
 #define GAME_RESULT_H
 
 #include "GameData.h"
+#include "../Engine/GameLogger.h"
 
 namespace object_models
 {
@@ -18,6 +19,9 @@ namespace object_models
         std::vector<int> _playerTurns;
         int _winner;
 
+        engine::GameLogger _logger;
+
+
         public:
 
         int id() { return _id; }
@@ -32,6 +36,7 @@ namespace object_models
 
         GameInfo() {}
         GameInfo(int id);
+        GameInfo(object_models::GameData game, engine::GameLogger logger);
         GameInfo(object_models::GameData game);
     };
 }

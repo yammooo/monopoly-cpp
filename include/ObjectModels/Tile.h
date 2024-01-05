@@ -20,7 +20,7 @@ namespace object_models
         object_models::TileCategory category() { return _category; }
         object_models::TileHousing housing() { return _housing; }
         void housing(object_models::TileHousing housing) { _housing = housing; }
-
+        
         int owner_id() { return _ownerId; }
         void set_property(int ownerId) { _ownerId = ownerId; }
 

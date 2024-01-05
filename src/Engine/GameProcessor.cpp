@@ -1,8 +1,11 @@
 #include "../../include/Engine/GameProcessor.h"
+#include "../../include/Engine/GameLogger.h"
+#include <stdexcept>
 
 using namespace object_models;
 using namespace dependency_injection;
 using namespace object_states;
+using namespace engine;
 
 std::vector<int> find_keys(const std::map<int, int>& inputMap)
 {
@@ -59,54 +62,79 @@ bool is_game_ended(GameData* game)
     return players_in_game == 1;
 }
 
+int winner_index(GameData* game)
+{
+    int winner = -1;
+    for(int i = 0; i < game->board()->get_player_number(); i++)
+    {
+        if(game->board()->player(i)->is_in_game())
+        {
+            winner=i;
+        }
+    }
+    // If there's only one player left in the game, the game has ended
+    return winner;
+}
+
 GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::RandomContext* random)
 {
+
+    GameLogger _logger; 
+
     if (action.type() != ActionType::ThrowDice)
     {
         throw std::exception();
     }
 
     auto player_index = game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number());
+    
+    auto player_position = game->board()->player(player_index)->position();
 
     if (!game->board()->player(player_index)->is_in_game())
     {
         game->board()->next_round();
         
-        return GameInfo(*game);
+        return GameInfo(*game, _logger);
     }
 
 
     int players_in_game = 0;
-    std::cout << "\nPlayers in game: ";
+    //std::cout << "\nPlayers in game: ";
     for(int i = 0; i < game->board()->get_player_number(); i++)
     {
         if(game->board()->player(i)->is_in_game())
         {
             players_in_game++;
-            std::cout << game->board()->player(i)->id() << " ";
+            //std::cout << game->board()->player(i)->id() << " ";
         }
     }
-    std::cout << "\nTotal: " << players_in_game << "\n";
+    //std::cout << "\nTotal: " << players_in_game << "\n";
 
 
-    std::cout << "Player " << player_index << " is throwing dice and has " << game->board()->player(player_index)->coins() << " coins.\n";
+    //std::cout << "Player " << player_index << " is throwing dice and has " << game->board()->player(player_index)->coins() << " coins.\n";
 
     auto dice_result = random->get_next(1, 6) + random->get_next(1, 6);
 
-    std::cout << "Player " << player_index << " rolled a " << dice_result << "\n";
+    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" ha tirato i dadi ottenendo un valore di "+ std::to_string(dice_result));
+
+    //std::cout << "Player " << player_index << " rolled a " << dice_result << "\n";
 
     auto old_position = game->board()->player(player_index)->position();
 
     auto new_position = (old_position + dice_result) % game->configuration().board_size();
 
-    std::cout << "Player " << player_index << " moved from " << old_position << " to " << new_position << "\n";
+    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" è arrivato alla casella "+ std::to_string(new_position));
+
+    //std::cout << "Player " << player_index << " moved from " << old_position << " to " << new_position << "\n";
 
     game->board()->player(player_index)->position(new_position);
 
     if (new_position < old_position)
     {
         game->board()->player(player_index)->credit(game->configuration().start_prize());
-        std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
+
+        _logger.log_action("- Giocatore "+std::to_string(player_index)+" è passato dal via e ha ritirato "+ std::to_string(game->configuration().start_prize())+ " fiorini");
+        //std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
     }
 
     auto tile = game->board()->tile(new_position);
@@ -122,16 +150,16 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         // If the tile is not owned by anyone
         if (tile.owner_id() == -1)
         {
-            std::cout << "Player " << player_index << " is on a tile that is not owned by anyone.\n";
+            //std::cout << "Player " << player_index << " is on a tile that is not owned by anyone.\n";
             auto buy_price = game->configuration().get_prize(PaymentAction::BuyLand, tile_category);
             
             // If the player has enough coins
             if (game->board()->player(player_index)->coins() >= buy_price)
             {
-                std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can buy a tile for " << buy_price << "\n";
+                //std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can buy a tile for " << buy_price << "\n";
                 game->board()->state(GameState::PlayerPayment);
             } else {
-                std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can't buy a tile for " << buy_price << "\n";
+                //std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can't buy a tile for " << buy_price << "\n";
                 game->board()->next_round();
             }
         }
@@ -141,23 +169,23 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
             // If the player is the owner of the tile
             if (player_index == tile.owner_id())
             {
-                std::cout << "Player " << player_index << " is on a tile that is owned by him.\n";
+                //std::cout << "Player " << player_index << " is on a tile that is owned by him.\n";
                 auto upgrade_cost = game->configuration().get_prize(tile.housing() == TileHousing::Land ? PaymentAction::BuyHouse : PaymentAction::BuyHotel, tile_category);
                 
                 // Check if the player has enough coins for the upgrade and the current housing is not a Hotel (since a Hotel is the highest upgrade)
                 if ((game->board()->player(player_index)->coins() >= upgrade_cost) && (tile.housing() == TileHousing::House || tile.housing() == TileHousing::Land))
                 {
-                    std::cout << "Player " << player_index << " can upgrade the tile because he has " << game->board()->player(player_index)->coins() << " coins.\n";
+                    //std::cout << "Player " << player_index << " can upgrade the tile because he has " << game->board()->player(player_index)->coins() << " coins.\n";
                     game->board()->state(GameState::PlayerPayment);
                 }
                 else if (tile.housing() == TileHousing::Hotel)
                 {
-                    std::cout << "Player " << player_index << " can't upgrade the tile because it is already an hotel.\n";
+                    //std::cout << "Player " << player_index << " can't upgrade the tile because it is already an hotel.\n";
                     game->board()->next_round();
                 }
                 else
                 {
-                    std::cout << "Player " << player_index << " can't upgrade the tile because he has " << game->board()->player(player_index)->coins() << " coins.\n";
+                    //std::cout << "Player " << player_index << " can't upgrade the tile because he has " << game->board()->player(player_index)->coins() << " coins.\n";
                     game->board()->next_round();
                 }
 
@@ -165,15 +193,15 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
             // If the player is not the owner of the tile and the tile is not a land
             else if (tile.housing() == TileHousing::House || tile.housing() == TileHousing::Hotel)
             {   
-                std::cout << "Player " << player_index << " is on a tile that is owned by someone else.\n";
-                std::cout << "Player " << player_index << " has to pay rent.\n";
+                //std::cout << "Player " << player_index << " is on a tile that is owned by someone else.\n";
+                //std::cout << "Player " << player_index << " has to pay rent.\n";
 
                 auto payment_action = tile.housing() == TileHousing::House ? PaymentAction::HouseStay : PaymentAction::HotelStay;
                 
                 auto payment = game->configuration().get_prize(payment_action, tile.category());
 
                 game->board()->player(player_index)->debit(payment);
-                std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
+                //std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
 
                 auto player_coins = game->board()->player(player_index)->coins();
 
@@ -186,12 +214,15 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
 
                 if (player_coins < 0)
                 {
-                    std::cout << "Player " << player_index << " is bankrupt.\n";
+                    //std::cout << "Player " << player_index << " is bankrupt.\n";
+
+                    _logger.log_action("- Giocatore "+std::to_string(player_index)+" è stato eliminato");
 
                     if(is_game_ended(game))
                     {
+                        _logger.log_action("- Giocatore "+ std::to_string(winner_index(game))+" ha vinto la partita ");
                         game->board()->state(GameState::Ended);
-                        return GameInfo(*game);
+                        return GameInfo(*game, _logger);
                     }
 
                     for (int i = 0; i < game->configuration().board_size(); i++)
@@ -203,12 +234,15 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                         }
                     }
                 }
+                else{
+                    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" ha pagato "+ std::to_string(payment)+" al giocatore "+ std::to_string(tile.owner_id())+ " per pernottamento nella casella "+ std::to_string(player_position));
+                }
                 game->board()->next_round();
             }
             // If the player is not the owner of the tile and the tile is a land
             else
             {   
-                std::cout << "Player " << player_index << " is on a land tile that is owned by someone else.\n";
+                //std::cout << "Player " << player_index << " is on a land tile that is owned by someone else.\n";
                 game->board()->next_round();
             }
         }
@@ -218,29 +252,32 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         throw std::exception();
     }
 
-    return GameInfo(*game);
+    return GameInfo(*game, _logger );
 }
 
 GameInfo process_player_payment(GameData* game, ActionInfo action)
-{
+{   
+    GameLogger _logger;
+
+    auto player_index = game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number());
+    
+
     if (action.type() != ActionType::AcceptPayment && action.type() != ActionType::DenyPayment)
     {
         throw std::exception();
     }
 
-    std::cout << "Processing payment...\n";
+    //std::cout << "Processing payment...\n";
 
     if (action.type() == ActionType::DenyPayment)
     {
-        std::cout << "Player " << game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number()) << " denied the payment.\n";
+        //std::cout << "Player " << game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number()) << " denied the payment.\n";
         game->board()->next_round();
         game->board()->state(GameState::PlayerDiceThrow);
-
-        return GameInfo(*game);
+        return GameInfo(*game, _logger);
     }
 
-    auto player_index = game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number());
-
+    
     auto player_position = game->board()->player(player_index)->position();
 
     auto tile = game->board()->tile(player_position);
@@ -256,14 +293,20 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
                 game->board()->tile(player_position).housing(TileHousing::House);
 
-                std::cout << "Player " << player_index << " upgraded to an house and has now " << game->board()->player(player_index)->coins() << " coins.\n";
+                //std::cout << "Player " << player_index << " upgraded to an house and has now " << game->board()->player(player_index)->coins() << " coins.\n";
+
+                _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha costruito una casa sul terreno "+ std::to_string(player_position));
+
             } else {
                 auto payment = game->configuration().get_prize(PaymentAction::BuyLand, tile.category());
                 game->board()->player(player_index)->debit(payment);
                 
                 game->board()->tile(player_position).set_property(player_index);
 
-                std::cout << "Player " << player_index << " bought a land and has now " << game->board()->player(player_index)->coins() << " coins.\n";
+                //std::cout << "Player " << player_index << " bought a land and has now " << game->board()->player(player_index)->coins() << " coins.\n";
+
+                _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha acquistato il terreno "+ std::to_string(player_position));
+                
             }
             break;
         }
@@ -274,7 +317,10 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
             game->board()->tile(player_position).housing(TileHousing::Hotel);
 
-            std::cout << "Player " << player_index << " upgraded to an hotel and has now " << game->board()->player(player_index)->coins() << " coins.\n";
+            //std::cout << "Player " << player_index << " upgraded to an hotel and has now " << game->board()->player(player_index)->coins() << " coins.\n";
+
+            _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha migliorato una casa in albergo sul terreno "+ std::to_string(player_position));
+                
             break;
         }
         default:
@@ -286,8 +332,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
     game->board()->next_round();
     game->board()->state(GameState::PlayerDiceThrow);
-
-    return GameInfo(*game);
+    return GameInfo(*game, _logger);
 }
 
 GameInfo engine::GameProcessor::process(GameData* game, ActionInfo action)
@@ -302,7 +347,7 @@ GameInfo engine::GameProcessor::process(GameData* game, ActionInfo action)
             break;
     }
 
-    return GameInfo(*game);
+    throw std::exception( );
 }
 
 object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData* game)
@@ -342,7 +387,7 @@ object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData
 
     game->board()->players(new_players);
 
-    return GameInfo(*game);
+    return GameInfo(*game); 
 };
 
 engine::GameProcessor::GameProcessor()

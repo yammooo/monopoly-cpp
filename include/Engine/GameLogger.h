@@ -1,8 +1,9 @@
 #ifndef GAME_LOGGER_H
 #define GAME_LOGGER_H
 
-#include <ostream>
+#include <iostream>
 #include <vector>
+#include <string>
 
 namespace engine
 {
@@ -11,10 +12,12 @@ namespace engine
 		private:
 
 		std::vector<std::ostream*> _streams;
+		std::vector<std::string> _strings;
 
 		public:
 		
 		GameLogger(std::vector<std::ostream*> streams) { _streams = streams; }
+		GameLogger() { }
 
 		void print(const std::string& str) const
 		{
@@ -23,6 +26,17 @@ namespace engine
 				(*stream) << str << std::endl;
 			}
 		}
+
+
+		void log_action (const std::string& str){
+
+			_strings.push_back(str);
+			std::cout<<str<<std::endl;
+
+		}
+
+
+
 	};
 }
 
