@@ -1,4 +1,8 @@
 #include "../../include/Client/GameClient.h"
+#include "../../include/Engine/GameLogger.h"
+
+#include <iostream>
+#include <fstream>
 
 using namespace client;
 using namespace engine;
@@ -17,6 +21,8 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
     ActionInfo action;
     int player_index;
 
+    std::ofstream log_file("../log.txt");
+
     while (info.state() != GameState::Ended) // while che fa andare tutta la simulazione
     {
         player_index = 0; // ---> new! info.current_turn(); ---> OLD // player_turns().at(info.round() % info.player_number());
@@ -33,9 +39,13 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
         }
 
         info = result.value();
+
+        std::cout << info.log_to_string(); // print to terminal
+        log_file << info.log_to_string(); // write to file
+
     }
 
-    std::cout << "The winner is player " << info.winner() << std::endl;
+    log_file.close();
 }
 
 client::GameClient::GameClient()

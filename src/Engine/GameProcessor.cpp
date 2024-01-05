@@ -87,8 +87,6 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     }
 
     auto player_index = game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number());
-    
-    auto player_position = game->board()->player(player_index)->position();
 
     if (!game->board()->player(player_index)->is_in_game())
     {
@@ -123,7 +121,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
 
     auto new_position = (old_position + dice_result) % game->configuration().board_size();
 
-    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" è arrivato alla casella "+ std::to_string(new_position));
+    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" é arrivato alla casella "+ std::to_string(new_position));
 
     //std::cout << "Player " << player_index << " moved from " << old_position << " to " << new_position << "\n";
 
@@ -133,7 +131,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     {
         game->board()->player(player_index)->credit(game->configuration().start_prize());
 
-        _logger.log_action("- Giocatore "+std::to_string(player_index)+" è passato dal via e ha ritirato "+ std::to_string(game->configuration().start_prize())+ " fiorini");
+        _logger.log_action("- Giocatore "+std::to_string(player_index)+" é passato dal via e ha ritirato "+ std::to_string(game->configuration().start_prize())+ " fiorini");
         //std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
     }
 
@@ -216,7 +214,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                 {
                     //std::cout << "Player " << player_index << " is bankrupt.\n";
 
-                    _logger.log_action("- Giocatore "+std::to_string(player_index)+" è stato eliminato");
+                    _logger.log_action("- Giocatore "+std::to_string(player_index)+" é stato eliminato");
 
                     if(is_game_ended(game))
                     {
@@ -235,7 +233,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                     }
                 }
                 else{
-                    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" ha pagato "+ std::to_string(payment)+" al giocatore "+ std::to_string(tile.owner_id())+ " per pernottamento nella casella "+ std::to_string(player_position));
+                    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" ha pagato "+ std::to_string(payment)+" al giocatore "+ std::to_string(tile.owner_id())+ " per pernottamento nella casella "+ std::to_string(new_position));
                 }
                 game->board()->next_round();
             }

@@ -27,15 +27,19 @@ namespace engine
 			}
 		}
 
+		void log_action (const std::string& str) { _strings.push_back(str); }
 
-		void log_action (const std::string& str){
+		std::string log_to_string()
+		{
+			std::string result = "";
 
-			_strings.push_back(str);
-			std::cout<<str<<std::endl;
+			for (auto str : _strings)
+			{
+				result += str + "\n";
+			}
 
+			return result;
 		}
-
-
 
 	};
 }

@@ -1,6 +1,8 @@
 #ifndef GAME_RESULT_H
 #define GAME_RESULT_H
 
+#include <string>
+
 #include "GameData.h"
 #include "../Engine/GameLogger.h"
 
@@ -27,6 +29,7 @@ namespace object_models
         int id() { return _id; }
         int player_number() { return _playerNumber; }
         int round() { return _round; }
+        std::string log_to_string() { return _logger.log_to_string(); }
         std::vector<int> player_turns() { return _playerTurns; }
 
         int winner() const { return _winner; }

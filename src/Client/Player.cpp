@@ -1,4 +1,4 @@
-#include "../include/Client/Player.h"
+#include "../../include/Client/Player.h"
 
 using namespace object_models;
 using namespace client;
@@ -10,16 +10,13 @@ ActionInfo Player::get_action(GameInfo info)
 	{
 		case GameState::PlayerDiceThrow:
 		{   
-            //ask for a show
 			return ActionInfo(ActionType::ThrowDice);
 			break;
 		}
 		case GameState::PlayerPayment:
 		{
-			//chiedo se vuole comprare  E se vuole uno show
             std::string result; // INPUT
             cin>>result;
-
 
 			if (result[0]=="N")
 			{
@@ -32,14 +29,6 @@ ActionInfo Player::get_action(GameInfo info)
 
 			break;
 		}
-        /*case GameState::PlayerRequest: 
-        {
-            // vuole vedere la board
-            // vuole vedere lista terreni case posseduti 
-            // vuole vedere il saldo di tutti 
-            return ActionInfo(ActionType::ShowToPlayer);
-
-        }*/
 		default:
 		{
 			throw std::exception();
