@@ -6,32 +6,25 @@ using namespace object_states;
 
 ActionInfo Bot::get_action(GameInfo info)
 {
-	switch (info.state())
+	GameState state = info.state();
+
+    if (state == GameState::PlayerDiceThrow)
+    {
+        return ActionInfo(ActionType::ThrowDice);
+    }
+	else if ((state == GameState::PlayerBuyLand) || (state == GameState::PlayerBuyHouse) || (state == GameState::PlayerBuyHotel))
 	{
-		case GameState::PlayerDiceThrow:
-		{
-			return ActionInfo(ActionType::ThrowDice);
-			break;
-		}
-		case GameState::PlayerPayment:
-		{
-			auto result = _random->get_next(1, 100);
+		int result = _random->get_next(1, 100);
 
-			if (result <= 25)
-			{
-				return ActionInfo(ActionType::AcceptPayment);
-			}
-			else
-			{
-				return ActionInfo(ActionType::DenyPayment);
-			}
-
-			break;
-		}
-		default:
+		if (result <= 25)
 		{
-			throw std::exception();
-			break;
+			return ActionInfo(ActionType::AcceptPayment);
 		}
-	}
+		else
+		{
+			return ActionInfo(ActionType::DenyPayment);
+		}
+    }
+
+    throw std::exception();
 }

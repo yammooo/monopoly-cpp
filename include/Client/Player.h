@@ -11,9 +11,9 @@ namespace client
 
 		public:
 
-		object_models::ActionInfo get_action(object_models::GameInfo info) { return object_models::ActionInfo(); }
+		object_models::ActionInfo get_action(object_models::GameInfo info);
 
 	};
 }
 
-#endif // !PLAYER_H
+#endif // PLAYER_H

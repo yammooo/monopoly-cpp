@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 
     // Assume configuration is default
 
-    players.push_back(new Bot());
+    players.push_back(new Player());
     players.push_back(new Bot());
     players.push_back(new Bot());
     players.push_back(new Bot());

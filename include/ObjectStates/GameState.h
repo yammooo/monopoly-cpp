@@ -7,9 +7,11 @@ namespace object_states
     {
         Undefined = 0,
         PlayerDiceThrow = 1,
-        PlayerPayment = 2,
-        InProgress = 3,
-        Ended = 4
+        PlayerBuyLand = 2,
+        PlayerBuyHouse = 3,
+        PlayerBuyHotel = 4,
+        InProgress = 5,
+        Ended = 6
     };
 }
 

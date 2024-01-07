@@ -25,4 +25,4 @@ namespace client
 	};
 }
 
-#endif // !BOT_H
+#endif // BOT_H

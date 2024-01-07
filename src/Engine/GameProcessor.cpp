@@ -155,7 +155,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
             if (game->board()->player(player_index)->coins() >= buy_price)
             {
                 //std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can buy a tile for " << buy_price << "\n";
-                game->board()->state(GameState::PlayerPayment);
+                game->board()->state(GameState::PlayerBuyLand);
             } else {
                 //std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can't buy a tile for " << buy_price << "\n";
                 game->board()->next_round();
@@ -173,8 +173,13 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                 // Check if the player has enough coins for the upgrade and the current housing is not a Hotel (since a Hotel is the highest upgrade)
                 if ((game->board()->player(player_index)->coins() >= upgrade_cost) && (tile.housing() == TileHousing::House || tile.housing() == TileHousing::Land))
                 {
-                    //std::cout << "Player " << player_index << " can upgrade the tile because he has " << game->board()->player(player_index)->coins() << " coins.\n";
-                    game->board()->state(GameState::PlayerPayment);
+                    if (tile.housing() == TileHousing::Land)
+                    {
+                        game->board()->state(GameState::PlayerBuyHouse);
+                    }else
+                    {
+                        game->board()->state(GameState::PlayerBuyHotel);
+                    }
                 }
                 else if (tile.housing() == TileHousing::Hotel)
                 {
@@ -334,18 +339,19 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 }
 
 GameInfo engine::GameProcessor::process(GameData* game, ActionInfo action)
-{
-    switch (game->board()->state())
+{   
+    GameState state = game->board()->state();
+
+    if (state == GameState::PlayerDiceThrow)
     {
-        case GameState::PlayerDiceThrow:
-            return process_player_dice_throw(game, action, _random);
-        case GameState::PlayerPayment:
-            return process_player_payment(game, action);
-        default:
-            break;
+        return process_player_dice_throw(game, action, _random);
+    }
+    else if ((state == GameState::PlayerBuyLand) || (state == GameState::PlayerBuyHouse) || (state == GameState::PlayerBuyHotel))
+    {
+        return process_player_payment(game, action);
     }
 
-    throw std::exception( );
+    throw std::exception();
 }
 
 object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData* game)

@@ -7,7 +7,6 @@ object_models::GameInfo::GameInfo(int id)
 
 object_models::GameInfo::GameInfo(object_models::GameData game, engine::GameLogger logger)
 {
-    // TODO: fai cose
     _id = game.id();
     _playerNumber = game.board()->get_player_number();
     _state = game.board()->state();
