@@ -18,33 +18,39 @@ ActionInfo Player::get_action(GameInfo info)
 	else if ((state == GameState::PlayerBuyLand) || (state == GameState::PlayerBuyHouse) || (state == GameState::PlayerBuyHotel))
 	{
 		int player_index = info.player_turns().get_current_player_index();
-
-		if (state == GameState::PlayerBuyLand)
-		{
-			cout << "- Giocatore " << player_index << ": Vuoi comprare il terreno? (S/N)" << endl;
-		}
-		else if (state == GameState::PlayerBuyHouse)
-		{
-			cout << "- Giocatore " << player_index << ": Vuoi comprare la casa? (S/N)" << endl;
-		}
-		else if (state == GameState::PlayerBuyHotel)
-		{
-			cout << "- Giocatore " << player_index << ": Vuoi comprare l'hotel? (S/N)" << endl;
-		}
-
 		string answer;
-		cin >> answer;
 
-		bool is_yes = answer == "S";
+		do
+		{
+			if (state == GameState::PlayerBuyLand)
+			{
+				cout << "- Giocatore " << player_index << ": Vuoi comprare il terreno? (S/N/show)" << endl;
+			}
+			else if (state == GameState::PlayerBuyHouse)
+			{
+				cout << "- Giocatore " << player_index << ": Vuoi comprare la casa? (S/N/show)" << endl;
+			}
+			else if (state == GameState::PlayerBuyHotel)
+			{
+				cout << "- Giocatore " << player_index << ": Vuoi comprare l'hotel? (S/N/show)" << endl;
+			}
 
-		if (is_yes)
-		{
-			return ActionInfo(ActionType::AcceptPayment);
-		}
-		else
-		{
-			return ActionInfo(ActionType::DenyPayment);
-		}
+			cin >> answer;
+
+			if (answer == "S")
+			{
+				return ActionInfo(ActionType::AcceptPayment);
+			}
+			else if (answer == "N")
+			{
+				return ActionInfo(ActionType::DenyPayment);
+			}
+			else if (answer == "show")
+			{
+				cout << info.board_string() << endl;
+			}
+
+		} while (answer != "S" && answer != "N");
 
     }
 

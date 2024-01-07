@@ -21,6 +21,7 @@ namespace object_models
         int _playerNumber;
         object_models::TurnManager _playerTurns;
         int _winner;
+        std::string _board_string;
 
         engine::GameLogger _logger;
 
@@ -32,6 +33,7 @@ namespace object_models
         int round() const { return _round; }
         std::string log_to_string() const { return _logger.log_to_string(); }
         object_models::TurnManager player_turns() { return _playerTurns; }
+        std::string board_string() const { return _board_string; }
 
         int winner() const { return _winner; }
 

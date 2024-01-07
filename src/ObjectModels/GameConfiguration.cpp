@@ -1,5 +1,6 @@
 #include <random>
 #include <algorithm>
+#include <stdexcept>
 
 #include "../../include/ObjectModels/GameConfiguration.h"
 
@@ -68,7 +69,12 @@ GameConfiguration::GameConfiguration(int cheapTilesNumber,
                                     int startPrize,
                                     int playerNumber
                                     )
-{
+{	
+	if ((cheapTilesNumber + standardTilesNumber + luxuryTilesNumber + 4) % 4 != 0)
+	{
+		throw std::invalid_argument("The game configuration is invalid. The board must be a square.");
+	}
+	
     _prices = prices;
     _maxRound = maxRound;
     _initialBalance = initialBalance;
@@ -77,6 +83,8 @@ GameConfiguration::GameConfiguration(int cheapTilesNumber,
 
 	std::random_device device;
     std::mt19937 rng(device());
+
+	int tile_size = cheapTilesNumber + standardTilesNumber + luxuryTilesNumber + 4;
 
     for (int i = 0; i < cheapTilesNumber; i++)
 	{
@@ -95,9 +103,8 @@ GameConfiguration::GameConfiguration(int cheapTilesNumber,
 
 	std::shuffle(_tiles.begin(), _tiles.end(), rng);
 
-	_tiles.insert(_tiles.begin(), Tile(TileCategory::Corner, TileHousing::Undefined));
-    _tiles.insert(_tiles.begin() + _tiles.size() / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
-    _tiles.insert(_tiles.begin() + _tiles.size() / 2, Tile(TileCategory::Corner, TileHousing::Undefined));
-    _tiles.insert(_tiles.begin() + 3 * _tiles.size() / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
-    _tiles.push_back(Tile(TileCategory::Corner, TileHousing::Undefined));
+	_tiles.insert(_tiles.begin(), Tile(TileCategory::Start, TileHousing::Undefined));
+    _tiles.insert(_tiles.begin() + tile_size / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
+    _tiles.insert(_tiles.begin() + tile_size / 2, Tile(TileCategory::Corner, TileHousing::Undefined));
+    _tiles.insert(_tiles.begin() + 3 * tile_size / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
 }

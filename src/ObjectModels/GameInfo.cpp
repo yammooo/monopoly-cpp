@@ -14,6 +14,7 @@ object_models::GameInfo::GameInfo(object_models::GameData game, engine::GameLogg
     _playerTurns = game.board()->player_turns();
     _winner = game.board()->winner();
     _logger = logger;
+    _board_string = game.board_to_string();
 }
 
 
@@ -25,4 +26,5 @@ object_models::GameInfo::GameInfo(object_models::GameData game){
     _round = game.board()->round();
     _playerTurns = game.board()->player_turns();
     _winner = game.board()->winner();
+    _board_string = game.board_to_string();
 }
