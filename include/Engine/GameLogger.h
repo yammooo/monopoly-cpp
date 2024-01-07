@@ -29,7 +29,7 @@ namespace engine
 
 		void log_action (const std::string& str) { _strings.push_back(str); }
 
-		std::string log_to_string()
+		std::string log_to_string() const
 		{
 			std::string result = "";
 
@@ -44,4 +44,4 @@ namespace engine
 	};
 }
 
-#endif // !GAME_LOGGER_H
+#endif // GAME_LOGGER_H

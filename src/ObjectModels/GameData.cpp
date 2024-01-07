@@ -17,4 +17,9 @@ GameData::GameData(int id, GameConfiguration configuration)
     _board = GameBoard(configuration.tiles(), players);
 
     // TODO: Add board configured as configuration says :)
-}   
+}
+
+std::string object_models::GameData::board_to_string() const
+{
+    
+}

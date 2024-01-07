@@ -5,6 +5,7 @@
 
 #include "GameData.h"
 #include "../Engine/GameLogger.h"
+#include "../ObjectStates/GameState.h"
 
 namespace object_models
 {
@@ -18,7 +19,7 @@ namespace object_models
         object_states::GameState _state;
 
         int _playerNumber;
-        std::vector<int> _playerTurns;
+        object_models::TurnManager _playerTurns;
         int _winner;
 
         engine::GameLogger _logger;
@@ -26,11 +27,11 @@ namespace object_models
 
         public:
 
-        int id() { return _id; }
-        int player_number() { return _playerNumber; }
-        int round() { return _round; }
-        std::string log_to_string() { return _logger.log_to_string(); }
-        std::vector<int> player_turns() { return _playerTurns; }
+        int id() const { return _id; }
+        int player_number() const { return _playerNumber; }
+        int round() const { return _round; }
+        std::string log_to_string() const { return _logger.log_to_string(); }
+        object_models::TurnManager player_turns() { return _playerTurns; }
 
         int winner() const { return _winner; }
 

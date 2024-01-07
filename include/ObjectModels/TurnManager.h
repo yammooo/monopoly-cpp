@@ -14,11 +14,13 @@ namespace object_models
 
 		public:
 
-		TurnManager(std::vector<int> turns);
+		TurnManager() {};
+
+		explicit TurnManager(std::vector<int> turns);
 
 		void remove_player(int player_index);
 
-		int get_next_player_index();
+		void next_turn();
 
 		int get_current_player_index();
 	};

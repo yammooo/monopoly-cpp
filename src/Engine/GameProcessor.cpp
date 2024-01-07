@@ -86,7 +86,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         throw std::exception();
     }
 
-    auto player_index = game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number());
+    auto player_index = game->board()->player_turns().get_current_player_index();
 
     if (!game->board()->player(player_index)->is_in_game())
     {
@@ -262,7 +262,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 {   
     GameLogger _logger;
 
-    auto player_index = game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number());
+    auto player_index = game->board()->player_turns().get_current_player_index();
     
 
     if (action.type() != ActionType::AcceptPayment && action.type() != ActionType::DenyPayment)
@@ -365,7 +365,7 @@ object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData
         pointsByPlayer[i] = _random->get_next(1, 6) + _random->get_next(1, 6);
     }
 
-    auto keys = find_keys(pointsByPlayer);
+    std::vector<int> keys = find_keys(pointsByPlayer);
     
     do
     {
@@ -378,7 +378,7 @@ object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData
 
     } while (keys.size() > 0);
 
-    auto sortedPlayers = get_keys(pointsByPlayer);
+    std::vector<int> sortedPlayers = get_keys(pointsByPlayer);
 
     game->board()->player_turns(sortedPlayers);
 

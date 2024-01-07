@@ -10,8 +10,7 @@ namespace object_states
         PlayerBuyLand = 2,
         PlayerBuyHouse = 3,
         PlayerBuyHotel = 4,
-        InProgress = 5,
-        Ended = 6
+        Ended = 5
     };
 }
 

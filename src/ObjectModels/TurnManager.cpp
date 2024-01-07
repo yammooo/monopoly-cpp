@@ -31,14 +31,10 @@ void TurnManager::remove_player(int player_index)
     _playerTurns = new_queue;
 }
 
-int TurnManager::get_next_player_index()
+void TurnManager::next_turn()
 {
-    int index = _playerTurns.front();
+    _playerTurns.push(_playerTurns.front());
     _playerTurns.pop();
-
-    _playerTurns.push(index);
-
-    return index;
 }
 
 int TurnManager::get_current_player_index()

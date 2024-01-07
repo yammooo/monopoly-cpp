@@ -3,8 +3,10 @@
 
 #include <vector>
 #include <map>
+
 #include "Tile.h"
 #include "PaymentAction.h"
+#include "../DependencyInjection/ServiceProvider.h"
 
 namespace object_models
 {
@@ -44,6 +46,16 @@ namespace object_models
                           int initialBalance,
                           int startPrize,
                           int playerNumber);
+
+        GameConfiguration(int cheapTilesNumber,
+                          int standardTilesNumber,
+                          int luxuryTilesNumber,
+                          std::map<object_models::PaymentAction, std::map<object_models::TileCategory, int>> prices,
+                          int maxRound,
+                          int initialBalance,
+                          int startPrize,
+                          int playerNumber);
+
 
     };
 }

@@ -25,7 +25,7 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 
     while (info.state() != GameState::Ended) // while che fa andare tutta la simulazione
     {
-        player_index = 0; // ---> new! info.current_turn(); ---> OLD // player_turns().at(info.round() % info.player_number());
+        int player_index = info.player_turns().get_current_player_index(); // ---> new! info.current_turn(); ---> OLD // player_turns().at(info.round() % info.player_number());
 
         action = _players[player_index]->get_action(info);  // passi al player le informazioni del gioco e gli chiedi cosa vuole fare
 

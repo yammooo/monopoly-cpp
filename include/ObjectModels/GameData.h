@@ -26,6 +26,8 @@ namespace object_models
         object_models::GameBoard* board() { return &_board; }
         const object_models::GameConfiguration& configuration() const { return _configuration; }
 
+        std::string board_to_string() const;
+
     };
 }
 

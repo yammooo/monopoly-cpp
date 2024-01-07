@@ -17,18 +17,19 @@ ActionInfo Player::get_action(GameInfo info)
     }
 	else if ((state == GameState::PlayerBuyLand) || (state == GameState::PlayerBuyHouse) || (state == GameState::PlayerBuyHotel))
 	{
+		int player_index = info.player_turns().get_current_player_index();
 
 		if (state == GameState::PlayerBuyLand)
 		{
-			cout << "Vuoi comprare il terreno? (S/N)" << endl;
+			cout << "- Giocatore " << player_index << ": Vuoi comprare il terreno? (S/N)" << endl;
 		}
 		else if (state == GameState::PlayerBuyHouse)
 		{
-			cout << "Vuoi comprare la casa? (S/N)" << endl;
+			cout << "- Giocatore " << player_index << ": Vuoi comprare la casa? (S/N)" << endl;
 		}
 		else if (state == GameState::PlayerBuyHotel)
 		{
-			cout << "Vuoi comprare l'hotel? (S/N)" << endl;
+			cout << "- Giocatore " << player_index << ": Vuoi comprare l'hotel? (S/N)" << endl;
 		}
 
 		string answer;
