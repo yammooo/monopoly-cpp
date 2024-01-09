@@ -1,8 +1,9 @@
-#include "../../include/Client/GameClient.h"
-#include "../../include/Engine/GameLogger.h"
-
 #include <iostream>
 #include <fstream>
+
+#include "../../include/Client/GameClient.h"
+#include "../../include/Engine/GameLogger.h"
+#include "../../include/Client/PlayerNumberMismatchException.h"
 
 using namespace client;
 using namespace engine;
@@ -15,7 +16,7 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 {
     if (_configuration.player_number() != info.player_number())
     {
-        throw std::exception();
+        throw PlayerNumberMismatchException();
     }
 
     ActionInfo action;
@@ -23,25 +24,23 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 
     std::ofstream log_file("../log.txt");
 
-    while ((info.state() != GameState::Ended) && (info.round() < _configuration.max_round())) // while che fa andare tutta la simulazione
+    while ((info.state() != GameState::Ended) && (info.round() < _configuration.max_round()))
     {
-        int player_index = info.player_turns().get_current_player_index(); // ---> new! info.current_turn(); ---> OLD // player_turns().at(info.round() % info.player_number());
+        int player_index = info.player_turns().get_current_player_index();
 
-        action = _players[player_index]->get_action(info);  // passi al player le informazioni del gioco e gli chiedi cosa vuole fare
+        action = _players[player_index]->get_action(info);
 
-        auto result = _context->play(info.id(), action); // vai sul context e fai un'azione 
-
-        //qua stampo i log --- ma auto result gioca solo 1 turno? cosa fa? 
+        auto result = _context->play(info.id(), action);
 
         if (result.isError())
         {
-            // TODO fai qualcosa
+            throw std::runtime_error(result.error());
         }
 
         info = result.value();
 
-        std::cout << info.log_to_string(); // print to terminal
-        log_file << info.log_to_string(); // write to file
+        std::cout << info.log_to_string(); // Print to terminal
+        log_file << info.log_to_string(); // Write to file
 
     }
 
@@ -54,7 +53,7 @@ client::GameClient::GameClient()
     _context = ServiceProvider::get_service<GameContext>();
 }
 
-void client::GameClient::execute(std::vector<IPlayer*> players)
+void client::GameClient::execute(const std::vector<IPlayer*>& players)
 {
     _players = players;
 
@@ -62,7 +61,7 @@ void client::GameClient::execute(std::vector<IPlayer*> players)
 
     if (info_result.isError())
     {
-        throw std::exception();
+        throw std::runtime_error(info_result.error());
     }
 
     auto info = info_result.value();
@@ -70,18 +69,18 @@ void client::GameClient::execute(std::vector<IPlayer*> players)
     execute_inner(info);
 }
 
-void client::GameClient::execute(std::vector<IPlayer*> players, GameConfiguration configuration)
+void client::GameClient::execute(const std::vector<IPlayer*>& players, GameConfiguration configuration)
 {
     _players = players;
 
-    auto info_result = _context->create_game(configuration);
+    Result<object_models::GameInfo> info_result = _context->create_game(configuration);
 
     if (info_result.isError())
     {
-        throw std::exception();
+        throw std::runtime_error(info_result.error());
     }
 
-    auto info = info_result.value();
+    GameInfo info = info_result.value();
 
     execute_inner(info);
 }

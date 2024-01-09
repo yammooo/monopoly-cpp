@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "../../include/ObjectModels/PlayerData.h"
 
 object_models::PlayerData::PlayerData(int id, int position, int coins)
@@ -14,10 +16,9 @@ bool object_models::PlayerData::is_valid()
 
 void object_models::PlayerData::debit(int coins)
 {
-    // TODO: Create exceptions
     if (coins < 0)
     {
-        throw "error";
+        throw std::invalid_argument("Number of coins to debit cannot be negative");
     }
 
     _coins -= coins;
@@ -25,10 +26,9 @@ void object_models::PlayerData::debit(int coins)
 
 void object_models::PlayerData::credit(int coins)
 {
-    // TODO: Create exceptions
     if (coins < 0)
     {
-        throw "error";
+        throw std::invalid_argument("Number of coins to credit cannot be negative");
     }
 
     _coins += coins;

@@ -26,8 +26,8 @@ namespace client
         
         GameClient();
 
-        void execute(std::vector<interfaces::IPlayer*> _players);
-        void execute(std::vector<interfaces::IPlayer*> _players, object_models::GameConfiguration);
+        void execute(const std::vector<interfaces::IPlayer*>& _players);
+        void execute(const std::vector<interfaces::IPlayer*>& _players, object_models::GameConfiguration);
     };
 }
 
