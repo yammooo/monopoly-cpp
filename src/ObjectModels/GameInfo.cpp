@@ -15,6 +15,8 @@ object_models::GameInfo::GameInfo(object_models::GameData game, engine::GameLogg
     _winner = game.board()->winner();
     _logger = logger;
     _board_string = game.board_to_string();
+    _players_properties_string = game.players_properties_to_string();
+    _players_coins_string = game.players_coins_to_string();
 }
 
 
@@ -27,4 +29,5 @@ object_models::GameInfo::GameInfo(object_models::GameData game){
     _playerTurns = game.board()->player_turns();
     _winner = game.board()->winner();
     _board_string = game.board_to_string();
+    _players_properties_string = game.players_properties_to_string();
 }

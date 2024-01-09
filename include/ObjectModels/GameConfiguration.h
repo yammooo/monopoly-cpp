@@ -17,6 +17,7 @@ namespace object_models
         static GameConfiguration _default;
 
         std::vector<object_models::Tile> _tiles;
+        std::vector<std::string> _tile_names;
         std::map<object_models::PaymentAction, std::map<object_models::TileCategory, int>> _prices;
 
         int _maxRound;
@@ -40,7 +41,7 @@ namespace object_models
 
         GameConfiguration() {}
 
-        GameConfiguration(std::vector<object_models::Tile> tiles, 
+        GameConfiguration(std::vector<object_models::Tile> tiles,
                           std::map<object_models::PaymentAction, std::map<object_models::TileCategory, int>> prices,
                           int maxRound,
                           int initialBalance,
@@ -55,8 +56,6 @@ namespace object_models
                           int initialBalance,
                           int startPrize,
                           int playerNumber);
-
-
     };
 }
 

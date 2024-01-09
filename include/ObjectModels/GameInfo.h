@@ -13,37 +13,41 @@ namespace object_models
     {
         private:
 
-        int _id;
-        int _round;
+            int _id;
+            int _round;
 
-        object_states::GameState _state;
+            object_states::GameState _state;
 
-        int _playerNumber;
-        object_models::TurnManager _playerTurns;
-        int _winner;
-        std::string _board_string;
+            int _playerNumber;
+            object_models::TurnManager _playerTurns;
+            int _winner;
+            std::string _board_string;
+            std::string _players_properties_string;
+            std::string _players_coins_string;
 
-        engine::GameLogger _logger;
-
+            engine::GameLogger _logger;
 
         public:
 
-        int id() const { return _id; }
-        int player_number() const { return _playerNumber; }
-        int round() const { return _round; }
-        std::string log_to_string() const { return _logger.log_to_string(); }
-        object_models::TurnManager player_turns() { return _playerTurns; }
-        std::string board_string() const { return _board_string; }
+            int id() const { return _id; }
+            int player_number() const { return _playerNumber; }
+            int round() const { return _round; }
+            std::string log_to_string() const { return _logger.log_to_string(); }
+            object_models::TurnManager player_turns() { return _playerTurns; }
 
-        int winner() const { return _winner; }
+            std::string board_string() const { return _board_string; }
+            std::string players_properties_string() const { return _players_properties_string; }
+            std::string players_coins_string() const { return _players_coins_string; }
 
-        object_states::GameState state() { return _state; }
-        void state(object_states::GameState state) { _state = state; }
+            int winner() const { return _winner; }
 
-        GameInfo() {}
-        GameInfo(int id);
-        GameInfo(object_models::GameData game, engine::GameLogger logger);
-        GameInfo(object_models::GameData game);
+            object_states::GameState state() { return _state; }
+            void state(object_states::GameState state) { _state = state; }
+
+            GameInfo() {}
+            GameInfo(int id);
+            GameInfo(object_models::GameData game, engine::GameLogger logger);
+            GameInfo(object_models::GameData game);
     };
 }
 

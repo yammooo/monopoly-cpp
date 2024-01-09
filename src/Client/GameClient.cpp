@@ -23,7 +23,7 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 
     std::ofstream log_file("../log.txt");
 
-    while (info.state() != GameState::Ended) // while che fa andare tutta la simulazione
+    while ((info.state() != GameState::Ended) && (info.round() < _configuration.max_round())) // while che fa andare tutta la simulazione
     {
         int player_index = info.player_turns().get_current_player_index(); // ---> new! info.current_turn(); ---> OLD // player_turns().at(info.round() % info.player_number());
 

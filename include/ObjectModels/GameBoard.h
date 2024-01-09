@@ -30,15 +30,20 @@ namespace object_models
         GameBoard(const std::vector<object_models::Tile>& tiles, const std::vector<object_models::PlayerData>& players);
 
         object_models::Tile& tile(int id) { return _tiles[id]; }
+        int get_tile_number() { return _tiles.size(); }
 
         object_models::TurnManager player_turns() { return _playerTurns; }
         void player_turns(const std::vector<int>& turns) { _playerTurns = object_models::TurnManager(turns); }
         
         int round() { return _roundCount; }
-        void next_round() {
+
+        void next_round()
+        {
             _playerTurns.next_turn();
             _roundCount++;
         }
+
+        void remove_player(int player_index) { _playerTurns.remove_player(player_index); }
 
         int winner();
 

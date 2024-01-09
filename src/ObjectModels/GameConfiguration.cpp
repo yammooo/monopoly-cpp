@@ -1,16 +1,20 @@
 #include <random>
 #include <algorithm>
 #include <stdexcept>
+#include <string>
 
 #include "../../include/ObjectModels/GameConfiguration.h"
 
 using namespace object_models;
 using namespace std;
 
+std::string tile_index_to_position(int index, int dimension);
+
 GameConfiguration GameConfiguration::_default = GameConfiguration(
 	8,
 	10,
 	6,
+	
 	// Create the payment action map
 	map<PaymentAction, map<TileCategory, int>> {
 		{ PaymentAction::BuyLand, map<TileCategory, int> {
@@ -41,7 +45,7 @@ GameConfiguration GameConfiguration::_default = GameConfiguration(
 	},
 	100,
 	100,
-	2,
+	20,
 	4
 );
 
@@ -107,4 +111,68 @@ GameConfiguration::GameConfiguration(int cheapTilesNumber,
     _tiles.insert(_tiles.begin() + tile_size / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
     _tiles.insert(_tiles.begin() + tile_size / 2, Tile(TileCategory::Corner, TileHousing::Undefined));
     _tiles.insert(_tiles.begin() + 3 * tile_size / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
+
+	for (int i = 0; i < _tiles.size(); i++)
+	{	
+		_tiles[i].position(i);
+		_tiles[i].name(tile_index_to_position(i, (tile_size/4)+1));
+	}
+
+}
+
+std::string tile_index_to_position(int index, int dimension) {
+    
+    // dimension is the lenght of the side of the board
+    
+    int part_of_vector = index/(dimension-1);  //--> which side of the board 
+    int pos_of_part = index%(dimension-1); //--> which position of that side
+    
+        
+    char row;
+    int column;
+    std::string output="";
+
+    
+    switch(part_of_vector)
+    {
+        case 0:                           // --> the south side (H2 to H8)
+            row = 'A' + (dimension-1);
+            output.append(1,row) ;
+
+            column = dimension - pos_of_part;
+            output.append(std::to_string(column)) ;
+
+            
+            break;
+
+        case 1:                          // --> the west side (B1 to H1)
+            row = 'A'+ (dimension -1 -(pos_of_part));
+            output.append(1,row) ;
+
+            column = 1;
+            output.append(std::to_string(column)) ;
+
+            break;
+
+
+        case 2:                         // --> the north side (A1 to A7)
+            row = 'A';
+            output.append(1,row) ;
+
+            column= pos_of_part +1 ;
+            output.append(std::to_string(column)) ;
+            
+            break;
+
+        case 3:                         // --> the east side (A8 to G8)
+            row = 'A' +(pos_of_part);
+            output.append(1,row) ;
+
+            column = dimension;
+            output.append(std::to_string(column)) ;
+            
+            break;
+    }
+    
+    return output;
 }

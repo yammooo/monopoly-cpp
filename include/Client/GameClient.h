@@ -1,3 +1,5 @@
+// Gianmaria Frigo
+
 #ifndef GAME_CLIENT_H
 #define GAME_CLIENT_H
 

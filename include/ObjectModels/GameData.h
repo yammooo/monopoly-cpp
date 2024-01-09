@@ -27,6 +27,10 @@ namespace object_models
         const object_models::GameConfiguration& configuration() const { return _configuration; }
 
         std::string board_to_string();
+        std::string players_properties_to_string();
+        std::string players_coins_to_string();
+
+        std::string tile_to_string(Tile tile, int tile_index);
     };
 }
 

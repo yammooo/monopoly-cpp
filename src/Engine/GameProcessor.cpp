@@ -79,7 +79,7 @@ int winner_index(GameData* game)
 GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::RandomContext* random)
 {
 
-    GameLogger _logger; 
+    GameLogger _logger;
 
     if (action.type() != ActionType::ThrowDice)
     {
@@ -87,14 +87,6 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     }
 
     auto player_index = game->board()->player_turns().get_current_player_index();
-
-    if (!game->board()->player(player_index)->is_in_game())
-    {
-        game->board()->next_round();
-        
-        return GameInfo(*game, _logger);
-    }
-
 
     int players_in_game = 0;
     //std::cout << "\nPlayers in game: ";
@@ -121,7 +113,11 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
 
     auto new_position = (old_position + dice_result) % game->configuration().board_size();
 
-    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" é arrivato alla casella "+ std::to_string(new_position));
+    auto tile = game->board()->tile(new_position);
+
+    auto tile_category = tile.category();
+
+    _logger.log_action("- Giocatore " + std::to_string(player_index) + " é arrivato alla casella " + tile.name()) ;
 
     //std::cout << "Player " << player_index << " moved from " << old_position << " to " << new_position << "\n";
 
@@ -134,10 +130,6 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         _logger.log_action("- Giocatore "+std::to_string(player_index)+" é passato dal via e ha ritirato "+ std::to_string(game->configuration().start_prize())+ " fiorini");
         //std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
     }
-
-    auto tile = game->board()->tile(new_position);
-
-    auto tile_category = tile.category();
 
     if (tile_category == TileCategory::Corner || tile_category == TileCategory::Start)
     {   
@@ -219,6 +211,8 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                 {
                     //std::cout << "Player " << player_index << " is bankrupt.\n";
 
+                    game->board()->remove_player(player_index);
+
                     _logger.log_action("- Giocatore "+std::to_string(player_index)+" é stato eliminato");
 
                     if(is_game_ended(game))
@@ -238,7 +232,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                     }
                 }
                 else{
-                    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" ha pagato "+ std::to_string(payment)+" al giocatore "+ std::to_string(tile.owner_id())+ " per pernottamento nella casella "+ std::to_string(new_position));
+                    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" ha pagato "+ std::to_string(payment)+" al giocatore "+ std::to_string(tile.owner_id())+ " per pernottamento nella casella " + tile.name()) ;
                 }
                 game->board()->next_round();
             }
@@ -298,7 +292,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
                 //std::cout << "Player " << player_index << " upgraded to an house and has now " << game->board()->player(player_index)->coins() << " coins.\n";
 
-                _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha costruito una casa sul terreno "+ std::to_string(player_position));
+                _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha costruito una casa sul terreno " + tile.name());
 
             } else {
                 auto payment = game->configuration().get_prize(PaymentAction::BuyLand, tile.category());
@@ -308,7 +302,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
                 //std::cout << "Player " << player_index << " bought a land and has now " << game->board()->player(player_index)->coins() << " coins.\n";
 
-                _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha acquistato il terreno "+ std::to_string(player_position));
+                _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha acquistato il terreno " + tile.name());
                 
             }
             break;
@@ -322,7 +316,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
             //std::cout << "Player " << player_index << " upgraded to an hotel and has now " << game->board()->player(player_index)->coins() << " coins.\n";
 
-            _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha migliorato una casa in albergo sul terreno "+ std::to_string(player_position));
+            _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha migliorato una casa in albergo sul terreno " + tile.name());
                 
             break;
         }

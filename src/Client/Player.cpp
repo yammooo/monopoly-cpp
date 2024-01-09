@@ -48,6 +48,8 @@ ActionInfo Player::get_action(GameInfo info)
 			else if (answer == "show")
 			{
 				cout << info.board_string() << endl;
+				cout << info.players_properties_string() << endl;
+				cout << info.players_coins_string() << endl;
 			}
 
 		} while (answer != "S" && answer != "N");
