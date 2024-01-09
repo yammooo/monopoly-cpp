@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #ifndef GAME_BOARD_H
 #define GAME_BOARD_H
 

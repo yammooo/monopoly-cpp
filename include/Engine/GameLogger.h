@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #ifndef GAME_LOGGER_H
 #define GAME_LOGGER_H
 

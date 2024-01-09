@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #ifndef I_VALIDABLE_H
 #define I_VALIDABLE_H
 

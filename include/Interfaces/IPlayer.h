@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #ifndef I_PLAYER_H
 #define I_PLAYER_H
 
@@ -15,4 +17,4 @@ namespace interfaces
 	};
 }
 
-#endif // !I_PLAYER_H
+#endif // I_PLAYER_H

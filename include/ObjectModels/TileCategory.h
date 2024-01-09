@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #ifndef TILE_CATEGORY_H
 #define TILE_CATEGORY_H
 

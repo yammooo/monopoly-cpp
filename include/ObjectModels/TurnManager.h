@@ -1,3 +1,5 @@
+// Author: Gianmaria Frigo
+
 #ifndef TURN_MANAGER_H
 #define TURN_MANAGER_H
 

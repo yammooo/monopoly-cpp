@@ -1,3 +1,5 @@
+// Author: Gianmaria Frigo
+
 #ifndef GAME_PROCESSOR_H
 #define GAME_PROCESSOR_H
 

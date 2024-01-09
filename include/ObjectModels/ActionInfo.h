@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #ifndef ACTION_INFO_H
 #define ACTION_INFO_H
 

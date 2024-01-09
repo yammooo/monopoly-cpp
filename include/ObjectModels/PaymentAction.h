@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #ifndef PAYMENT_ACTION_H
 #define PAYMENT_ACTION_H
 

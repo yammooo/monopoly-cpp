@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #ifndef PLAYER_DATA_H
 #define PLAYER_DATA_H
 

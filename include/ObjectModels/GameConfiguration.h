@@ -1,3 +1,5 @@
+// Author: Gianmaria Frigo
+
 #ifndef GAME_CONFIGURATION_H
 #define GAME_CONFIGURATION_H
 
@@ -17,7 +19,6 @@ namespace object_models
         static GameConfiguration _default;
 
         std::vector<object_models::Tile> _tiles;
-        std::vector<std::string> _tile_names;
         std::map<object_models::PaymentAction, std::map<object_models::TileCategory, int>> _prices;
 
         int _maxRound;

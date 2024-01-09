@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #ifndef GAME_CONTEXT_H
 #define GAME_CONTEXT_H
 

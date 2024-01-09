@@ -1,3 +1,5 @@
+// Author: Gianmaria Frigo
+
 #ifndef GAME_DATA_H
 #define GAME_DATA_H
 

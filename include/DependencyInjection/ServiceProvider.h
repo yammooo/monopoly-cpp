@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #ifndef SERVICE_PROVIDER_H
 #define SERVICE_PROVIDER_H
 

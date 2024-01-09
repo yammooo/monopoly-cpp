@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #ifndef RANDOM_CONTEXT_H
 #define RANDOM_CONTEXT_H
 

@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #ifndef GAME_REPOSITORY_H
 #define GAME_REPOSITORY_H
 
