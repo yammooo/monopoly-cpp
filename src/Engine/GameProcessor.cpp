@@ -1,3 +1,5 @@
+// Author: Gianmaria Frigo
+
 #include "../../include/Engine/GameProcessor.h"
 #include "../../include/Engine/GameLogger.h"
 #include <stdexcept>
@@ -7,8 +9,10 @@ using namespace dependency_injection;
 using namespace object_states;
 using namespace engine;
 
-std::vector<int> find_keys(const std::map<int, int>& inputMap)
-{
+// Function to find keys in the input map that have the same value
+std::vector<int> find_keys_with_duplicate_values(const std::map<int, int>& inputMap)
+{  
+    // Map that stores the values from the input map as keys
     std::unordered_map<int, std::vector<int>> valueToKeysMap;
 
     for (const auto& pair : inputMap)
@@ -16,20 +20,23 @@ std::vector<int> find_keys(const std::map<int, int>& inputMap)
         valueToKeysMap[pair.second].push_back(pair.first);
     }
 
-    std::vector<int> result;
+    std::vector<int> output;
 
+    // Find keys with duplicate values
     for (const auto& pair : valueToKeysMap)
     {
+        // If more than one key has the same value, add them to the output vector
         if (pair.second.size() > 1)
         {
-            result.insert(result.end(), pair.second.begin(), pair.second.end());
+            output.insert(output.end(), pair.second.begin(), pair.second.end());
         }
     }
 
-    return result;
+    return output;
 }
 
-std::vector<int> get_keys(const std::map<int, int>& inputMap)
+// Function to get keys from the input map sorted by their values
+std::vector<int> get_keys_sorted_by_values(const std::map<int, int>& inputMap)
 {
     std::vector<int> keys {};
 
@@ -78,78 +85,67 @@ int winner_index(GameData* game)
 
 GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::RandomContext* random)
 {
-
     GameLogger _logger;
 
+    // Check if the action type is ThrowDice
     if (action.type() != ActionType::ThrowDice)
     {
-        throw std::exception();
+        throw std::invalid_argument("Expected ThrowDice action type in GameProcessor::process_player_dice_throw method");
     }
 
     auto player_index = game->board()->player_turns().get_current_player_index();
 
-    int players_in_game = 0;
-    //std::cout << "\nPlayers in game: ";
-    for(int i = 0; i < game->board()->get_player_number(); i++)
-    {
-        if(game->board()->player(i)->is_in_game())
-        {
-            players_in_game++;
-            //std::cout << game->board()->player(i)->id() << " ";
-        }
-    }
-    //std::cout << "\nTotal: " << players_in_game << "\n";
+    // Get the current player's coins
+    auto player_coins = game->board()->player(player_index)->coins();
 
-
-    //std::cout << "Player " << player_index << " is throwing dice and has " << game->board()->player(player_index)->coins() << " coins.\n";
-
+    // Generate a random dice result
     auto dice_result = random->get_next(1, 6) + random->get_next(1, 6);
 
-    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" ha tirato i dadi ottenendo un valore di "+ std::to_string(dice_result));
+    _logger.log_action("- Giocatore " + std::to_string(player_index) + " ha tirato i dadi ottenendo un valore di " + std::to_string(dice_result));
 
-    //std::cout << "Player " << player_index << " rolled a " << dice_result << "\n";
-
+    // Calculate the new position based on the dice result
     auto old_position = game->board()->player(player_index)->position();
-
     auto new_position = (old_position + dice_result) % game->configuration().board_size();
 
+    // Get the tile at the new position
     auto tile = game->board()->tile(new_position);
-
     auto tile_category = tile.category();
 
-    _logger.log_action("- Giocatore " + std::to_string(player_index) + " é arrivato alla casella " + tile.name()) ;
+    _logger.log_action("- Giocatore " + std::to_string(player_index) + " è arrivato alla casella " + tile.name());
 
-    //std::cout << "Player " << player_index << " moved from " << old_position << " to " << new_position << "\n";
-
+    // Update the player's position
     game->board()->player(player_index)->position(new_position);
 
+    // Check if the player passed the Start tile
     if (new_position < old_position)
     {
-        game->board()->player(player_index)->credit(game->configuration().start_prize());
+        // Credit the player with the start prize
+        auto start_prize = game->configuration().start_prize();
+        game->board()->player(player_index)->credit(start_prize);
 
-        _logger.log_action("- Giocatore "+std::to_string(player_index)+" é passato dal via e ha ritirato "+ std::to_string(game->configuration().start_prize())+ " fiorini");
-        //std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
+        _logger.log_action("- Giocatore " + std::to_string(player_index) + " è passato dal via e ha ritirato " + std::to_string(start_prize) + " fiorini");
     }
 
     if (tile_category == TileCategory::Corner || tile_category == TileCategory::Start)
-    {   
+    {
+        // If the tile is a corner or start tile go to the next round
         game->board()->next_round();
     }
     else if (tile_category == TileCategory::Cheap || tile_category == TileCategory::Standard || tile_category == TileCategory::Luxury)
-    {   
+    {
         // If the tile is not owned by anyone
         if (tile.owner_id() == -1)
         {
-            //std::cout << "Player " << player_index << " is on a tile that is not owned by anyone.\n";
             auto buy_price = game->configuration().get_prize(PaymentAction::BuyLand, tile_category);
             
             // If the player has enough coins
             if (game->board()->player(player_index)->coins() >= buy_price)
             {
-                //std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can buy a tile for " << buy_price << "\n";
                 game->board()->state(GameState::PlayerBuyLand);
-            } else {
-                //std::cout << "Player " << player_index << " has " << game->board()->player(player_index)->coins() << " can't buy a tile for " << buy_price << "\n";
+            }
+            else
+            {
+                // If the player doesn't have enough coins, move to the next round
                 game->board()->next_round();
             }
         }
@@ -159,7 +155,6 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
             // If the player is the owner of the tile
             if (player_index == tile.owner_id())
             {
-                //std::cout << "Player " << player_index << " is on a tile that is owned by him.\n";
                 auto upgrade_cost = game->configuration().get_prize(tile.housing() == TileHousing::Land ? PaymentAction::BuyHouse : PaymentAction::BuyHotel, tile_category);
                 
                 // Check if the player has enough coins for the upgrade and the current housing is not a Hotel (since a Hotel is the highest upgrade)
@@ -168,49 +163,43 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                     if (tile.housing() == TileHousing::Land)
                     {
                         game->board()->state(GameState::PlayerBuyHouse);
-                    }else
+                    }
+                    else
                     {
                         game->board()->state(GameState::PlayerBuyHotel);
                     }
                 }
-                else if (tile.housing() == TileHousing::Hotel)
-                {
-                    //std::cout << "Player " << player_index << " can't upgrade the tile because it is already an hotel.\n";
-                    game->board()->next_round();
-                }
                 else
                 {
-                    //std::cout << "Player " << player_index << " can't upgrade the tile because he has " << game->board()->player(player_index)->coins() << " coins.\n";
                     game->board()->next_round();
                 }
-
             }
-            // If the player is not the owner of the tile and the tile is not a land
+            // If the player is not the owner of the tile and the tile is not a land they have to pay rent
             else if (tile.housing() == TileHousing::House || tile.housing() == TileHousing::Hotel)
             {   
-                //std::cout << "Player " << player_index << " is on a tile that is owned by someone else.\n";
-                //std::cout << "Player " << player_index << " has to pay rent.\n";
 
                 auto payment_action = tile.housing() == TileHousing::House ? PaymentAction::HouseStay : PaymentAction::HotelStay;
                 
                 auto payment = game->configuration().get_prize(payment_action, tile.category());
 
+                // Debit the rent to the player
                 game->board()->player(player_index)->debit(payment);
-                //std::cout << "Player " << player_index << " has now " << game->board()->player(player_index)->coins() << ".\n";
 
                 auto player_coins = game->board()->player(player_index)->coins();
 
+
                 if (player_coins < 0)
-                {
+                {   
+                    // The player doesn't have enough coins to cover the full rent.
+                    // We decided that in this case the player pays as much as he has.
                     payment += player_coins;
                 }
 
                 game->board()->player(tile.owner_id())->credit(payment);
 
+                // If the player doesn't have enough coins to pay the rent, they go bankrupt
                 if (player_coins < 0)
                 {
-                    //std::cout << "Player " << player_index << " is bankrupt.\n";
-
                     game->board()->remove_player(player_index);
 
                     _logger.log_action("- Giocatore "+std::to_string(player_index)+" é stato eliminato");
@@ -222,6 +211,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                         return GameInfo(*game, _logger);
                     }
 
+                    // Reset all the tiles owned by the bankrupt player
                     for (int i = 0; i < game->configuration().board_size(); i++)
                     {
                         if (game->board()->tile(i).owner_id() == player_index)
@@ -246,7 +236,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     }
     else
     {
-        throw std::exception();
+        throw std::invalid_argument("Unexpected TileCategory in GameProcessor::process_player_dice_throw");
     }
 
     return GameInfo(*game, _logger );
@@ -261,46 +251,44 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
     if (action.type() != ActionType::AcceptPayment && action.type() != ActionType::DenyPayment)
     {
-        throw std::exception();
+        throw std::invalid_argument("Invalid action type provided to GameProcessor::process_player_payment. Expected AcceptPayment or DenyPayment.");
     }
-
-    //std::cout << "Processing payment...\n";
 
     if (action.type() == ActionType::DenyPayment)
     {
-        //std::cout << "Player " << game->board()->player_turns().at(game->board()->round() % game->board()->get_player_number()) << " denied the payment.\n";
+        // If the action type is DenyPayment,
+        // move to the next round and set the game state to PlayerDiceThrow
         game->board()->next_round();
         game->board()->state(GameState::PlayerDiceThrow);
         return GameInfo(*game, _logger);
     }
-
     
     auto player_position = game->board()->player(player_index)->position();
-
     auto tile = game->board()->tile(player_position);
 
+    // Check the housing type of the tile
     switch (tile.housing())
     {
         case TileHousing::Land:
         {
             if (tile.owner_id() == player_index)
             {
+                // If the player is the owner of the land it buys a house
                 auto payment = game->configuration().get_prize(PaymentAction::BuyHouse, tile.category());
                 game->board()->player(player_index)->debit(payment);
 
+                // Upgrade the land to a house
                 game->board()->tile(player_position).housing(TileHousing::House);
-
-                //std::cout << "Player " << player_index << " upgraded to an house and has now " << game->board()->player(player_index)->coins() << " coins.\n";
 
                 _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha costruito una casa sul terreno " + tile.name());
 
             } else {
+                // If the player is not the owner of the land it buys the land
                 auto payment = game->configuration().get_prize(PaymentAction::BuyLand, tile.category());
                 game->board()->player(player_index)->debit(payment);
                 
+                // Set the player as the owner of the land
                 game->board()->tile(player_position).set_property(player_index);
-
-                //std::cout << "Player " << player_index << " bought a land and has now " << game->board()->player(player_index)->coins() << " coins.\n";
 
                 _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha acquistato il terreno " + tile.name());
                 
@@ -309,26 +297,25 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
         }
         case TileHousing::House:
         {   
+            // If the tile is a house, the player buys a hotel
             auto payment = game->configuration().get_prize(PaymentAction::BuyHotel, tile.category());
             game->board()->player(player_index)->debit(payment);
 
+            // Upgrade the house to a hotel
             game->board()->tile(player_position).housing(TileHousing::Hotel);
 
-            //std::cout << "Player " << player_index << " upgraded to an hotel and has now " << game->board()->player(player_index)->coins() << " coins.\n";
-
             _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha migliorato una casa in albergo sul terreno " + tile.name());
-                
             break;
         }
         default:
-            throw std::exception();
+            throw std::invalid_argument("Invalid tile housing type encountered in GameProcessor::process_player_payment method");
             break;
     }
 
-    game->board()->tile(player_position).set_property(player_index);
-
+    // Move to the next round and set the game state to PlayerDiceThrow
     game->board()->next_round();
     game->board()->state(GameState::PlayerDiceThrow);
+
     return GameInfo(*game, _logger);
 }
 
@@ -345,7 +332,7 @@ GameInfo engine::GameProcessor::process(GameData* game, ActionInfo action)
         return process_player_payment(game, action);
     }
 
-    throw std::exception();
+    throw std::invalid_argument("Invalid GameState in GameProcessor::process method");
 }
 
 object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData* game)
@@ -354,13 +341,15 @@ object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData
 
     std::map<int, int> pointsByPlayer;
 
+    // Assign random points to each player
     for (int i = 0; i < playerNumber; i++)
     {
         pointsByPlayer[i] = _random->get_next(1, 6) + _random->get_next(1, 6);
     }
 
-    std::vector<int> keys = find_keys(pointsByPlayer);
+    std::vector<int> keys = find_keys_with_duplicate_values(pointsByPlayer);
     
+    // Continue assigning random points until all players have unique points
     do
     {
         for (int i = 0; i < keys.size(); i++)
@@ -368,24 +357,27 @@ object_models::GameInfo engine::GameProcessor::init_game(object_models::GameData
             pointsByPlayer[keys[i]] = _random->get_next(1, 6) + _random->get_next(1, 6);
         }
 
-        keys = find_keys(pointsByPlayer);
+        keys = find_keys_with_duplicate_values(pointsByPlayer);
 
     } while (keys.size() > 0);
 
-    std::vector<int> sortedPlayers = get_keys(pointsByPlayer);
+    std::vector<int> sortedPlayers = get_keys_sorted_by_values(pointsByPlayer);
 
+    // Set the player turns based on the sorted players
     game->board()->player_turns(sortedPlayers);
 
-    std::vector<PlayerData> new_players {};
+    std::vector<PlayerData> newPlayers {};
 
+    // Create PlayerData for each player
     for (int i = 0; i < playerNumber; i++)
     {
-        new_players.push_back(PlayerData(i, 0, game->configuration().initial_balance()));
+        newPlayers.push_back(PlayerData(i, 0, game->configuration().initial_balance()));
     }
 
-    game->board()->players(new_players);
+    game->board()->players(newPlayers);
 
-    return GameInfo(*game); 
+    // Return the updated GameInfo
+    return GameInfo(*game);
 };
 
 engine::GameProcessor::GameProcessor()

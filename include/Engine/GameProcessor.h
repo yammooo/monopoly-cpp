@@ -23,15 +23,19 @@ namespace engine
     {
         private:
 
-        engine::RandomContext* _random;
+            engine::RandomContext* _random;
 
         public:
 
-        GameProcessor();
+            GameProcessor();
 
-        object_models::GameInfo process(object_models::GameData* game, object_models::ActionInfo action);
+            // This method takes the current game data and a player action,
+            // processes the action, and returns the updated game data.
+            object_models::GameInfo process(object_models::GameData* game, object_models::ActionInfo action);
 
-        object_models::GameInfo init_game(object_models::GameData* game);
+            // This function initializes the game by throwing the dices for each player,
+            // setting the player turns and initializing player data objects in the GameBoard.
+            object_models::GameInfo init_game(object_models::GameData* game);
     };
 }
 

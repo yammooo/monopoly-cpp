@@ -17,18 +17,21 @@ namespace client
     {
         private:
 
-        std::vector<std::shared_ptr<interfaces::IPlayer>> _players;
-        object_models::GameConfiguration _configuration;
-        engine::GameContext* _context;
-            
-        void execute_inner(object_models::GameInfo info);
+            std::vector<std::shared_ptr<interfaces::IPlayer>> _players;
+            object_models::GameConfiguration _configuration;
+            engine::GameContext* _context;
+                
+            void execute_inner(object_models::GameInfo info);
 
         public:
-        
-        GameClient();
+            
+            GameClient();
 
-        void execute(std::vector<std::shared_ptr<interfaces::IPlayer>> players);
-        void execute(std::vector<std::shared_ptr<interfaces::IPlayer>> players, object_models::GameConfiguration);
+            // Method to execute the game with a vector of players and the default configuration
+            void execute(std::vector<std::shared_ptr<interfaces::IPlayer>> players);
+
+            // Method to execute the game with a vector of players and a game configuration
+            void execute(std::vector<std::shared_ptr<interfaces::IPlayer>> players, object_models::GameConfiguration);
     };
 }
 
