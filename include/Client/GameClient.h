@@ -4,6 +4,7 @@
 #define GAME_CLIENT_H
 
 #include <vector>
+#include <memory>
 
 #include "../Interfaces/IPlayer.h"
 #include "../Engine/GameContext.h"
@@ -16,7 +17,7 @@ namespace client
     {
         private:
 
-        std::vector<interfaces::IPlayer*> _players;
+        std::vector<std::shared_ptr<interfaces::IPlayer>> _players;
         object_models::GameConfiguration _configuration;
         engine::GameContext* _context;
             
@@ -26,8 +27,8 @@ namespace client
         
         GameClient();
 
-        void execute(const std::vector<interfaces::IPlayer*>& _players);
-        void execute(const std::vector<interfaces::IPlayer*>& _players, object_models::GameConfiguration);
+        void execute(std::vector<std::shared_ptr<interfaces::IPlayer>> players);
+        void execute(std::vector<std::shared_ptr<interfaces::IPlayer>> players, object_models::GameConfiguration);
     };
 }
 

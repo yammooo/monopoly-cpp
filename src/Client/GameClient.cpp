@@ -53,7 +53,7 @@ client::GameClient::GameClient()
     _context = ServiceProvider::get_service<GameContext>();
 }
 
-void client::GameClient::execute(const std::vector<IPlayer*>& players)
+void client::GameClient::execute(std::vector<std::shared_ptr<IPlayer>> players)
 {
     _players = players;
 
@@ -69,7 +69,7 @@ void client::GameClient::execute(const std::vector<IPlayer*>& players)
     execute_inner(info);
 }
 
-void client::GameClient::execute(const std::vector<IPlayer*>& players, GameConfiguration configuration)
+void client::GameClient::execute(std::vector<std::shared_ptr<IPlayer>> players, GameConfiguration configuration)
 {
     _players = players;
 

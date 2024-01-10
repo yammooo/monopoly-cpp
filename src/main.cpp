@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 
     build_services();
 
-    std::vector<IPlayer*> players;
+    std::vector<std::shared_ptr<IPlayer>> players;
 
     if (argc != 2 || (strcmp(argv[1], "computer") && strcmp(argv[1], "human")))
     {
@@ -57,17 +57,17 @@ int main(int argc, char** argv)
 
     if (!strcmp(argv[1], "computer"))
     {
-       players.push_back(new Bot());
-       players.push_back(new Bot());
-       players.push_back(new Bot());
-       players.push_back(new Bot());
+       players.push_back(std::make_shared<Bot>());
+       players.push_back(std::make_shared<Bot>());
+       players.push_back(std::make_shared<Bot>());
+       players.push_back(std::make_shared<Bot>());
     }
     else
     {
-       players.push_back(new Player());
-       players.push_back(new Bot());
-       players.push_back(new Bot());
-       players.push_back(new Bot());
+       players.push_back(std::make_shared<Player>());
+       players.push_back(std::make_shared<Bot>());
+       players.push_back(std::make_shared<Bot>());
+       players.push_back(std::make_shared<Bot>());
     }
     
     try
