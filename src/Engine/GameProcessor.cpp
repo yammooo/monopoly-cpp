@@ -55,6 +55,7 @@ std::vector<int> get_keys_sorted_by_values(const std::map<int, int>& inputMap)
     return keys;
 }
 
+// Function to check if the game has ended
 bool is_game_ended(GameData* game)
 {
     int players_in_game = 0;
@@ -69,6 +70,7 @@ bool is_game_ended(GameData* game)
     return players_in_game == 1;
 }
 
+// Function to get the index of the winner
 int winner_index(GameData* game)
 {
     int winner = -1;
@@ -79,7 +81,6 @@ int winner_index(GameData* game)
             winner=i;
         }
     }
-    // If there's only one player left in the game, the game has ended
     return winner;
 }
 
