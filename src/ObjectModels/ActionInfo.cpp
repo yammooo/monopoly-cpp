@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #include "../../include/ObjectModels/ActionInfo.h"
 
 object_models::ActionInfo::ActionInfo(ActionType type, PaymentAction paymentAction)

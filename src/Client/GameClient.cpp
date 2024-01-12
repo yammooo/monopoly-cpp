@@ -58,6 +58,11 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
         log_file << info.log_to_string();
     }
 
+    if (info.round() >= _configuration.max_round())
+    {
+        std::cout << "The game ended because the maximum round limit was reached." << std::endl;
+    }
+
     log_file.close();
 }
 

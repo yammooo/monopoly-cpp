@@ -73,7 +73,6 @@ int main(int argc, char** argv)
     try
     {
         ServiceProvider::get_service<GameClient>()->execute(players);
-        
         return 0;
     }
     catch(const std::exception& e)

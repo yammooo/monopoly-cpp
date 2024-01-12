@@ -19,15 +19,7 @@ namespace engine
 		public:
 		
 		GameLogger(std::vector<std::ostream*> streams) { _streams = streams; }
-		GameLogger() { }
-
-		void print(const std::string& str) const
-		{
-			for (auto stream : _streams)
-			{
-				(*stream) << str << std::endl;
-			}
-		}
+		GameLogger() {}
 
 		void log_action (const std::string& str) { _strings.push_back(str); }
 

@@ -1,4 +1,4 @@
-// Author: Luca Bonaldo
+// Author: Martina Naldoni
 
 #ifndef RANDOM_CONTEXT_H
 #define RANDOM_CONTEXT_H

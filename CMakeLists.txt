@@ -1,14 +1,10 @@
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_BUILD_TYPE Release)
 project(MonopolyCpp)
 cmake_minimum_required(VERSION 3.0)
 
 include_directories(include)
 
-# Set -O2 option for Release builds only
-if(CMAKE_BUILD_TYPE MATCHES Release)
-    add_compile_options(-O2)
-endif()
+#add_compile_options(-O2)
 
 add_library(objectModels STATIC src/ObjectModels/GameConfiguration.cpp src/ObjectModels/GameBoard.cpp src/ObjectModels/GameData.cpp src/ObjectModels/GameInfo.cpp src/ObjectModels/ActionInfo.cpp src/ObjectModels/PlayerData.cpp src/ObjectModels/Tile.cpp src/ObjectModels/TurnManager.cpp)
 add_library(dependencyInjection STATIC src/DependencyInjection/ServiceProvider.cpp)

@@ -8,7 +8,7 @@
 using namespace object_models;
 using namespace std;
 
-std::string tile_index_to_position(int index, int dimension);
+std::string tile_index_to_name(int index, int dimension);
 
 GameConfiguration GameConfiguration::_default = GameConfiguration(
 	8,
@@ -115,27 +115,25 @@ GameConfiguration::GameConfiguration(int cheapTilesNumber,
 	for (int i = 0; i < _tiles.size(); i++)
 	{	
 		_tiles[i].position(i);
-		_tiles[i].name(tile_index_to_position(i, (tile_size/4)+1));
+		_tiles[i].name(tile_index_to_name(i, (tile_size/4)+1));
 	}
 
 }
 
-std::string tile_index_to_position(int index, int dimension) {
+std::string tile_index_to_name(int index, int dimension) {
     
     // dimension is the lenght of the side of the board
     
-    int part_of_vector = index/(dimension-1);  //--> which side of the board 
-    int pos_of_part = index%(dimension-1); //--> which position of that side
+    int part_of_vector = index/(dimension-1);  // side of the board 
+    int pos_of_part = index%(dimension-1); // position on that side
     
-        
     char row;
     int column;
     std::string output="";
-
     
     switch(part_of_vector)
     {
-        case 0:                           // --> the south side (H2 to H8)
+        case 0:                           // --> the south side (H2 to H8 in a 8x8 board)
             row = 'A' + (dimension-1);
             output.append(1,row) ;
 
@@ -145,7 +143,7 @@ std::string tile_index_to_position(int index, int dimension) {
             
             break;
 
-        case 1:                          // --> the west side (B1 to H1)
+        case 1:                          // --> the west side (B1 to H1 in a 8x8 board)
             row = 'A'+ (dimension -1 -(pos_of_part));
             output.append(1,row) ;
 
@@ -155,7 +153,7 @@ std::string tile_index_to_position(int index, int dimension) {
             break;
 
 
-        case 2:                         // --> the north side (A1 to A7)
+        case 2:                         // --> the north side (A1 to A7 in a 8x8 board)
             row = 'A';
             output.append(1,row) ;
 
@@ -164,12 +162,12 @@ std::string tile_index_to_position(int index, int dimension) {
             
             break;
 
-        case 3:                         // --> the east side (A8 to G8)
+        case 3:                         // --> the east side (A8 to G8 in a 8x8 board)
             row = 'A' +(pos_of_part);
-            output.append(1,row) ;
+            output.append(1, row) ;
 
             column = dimension;
-            output.append(std::to_string(column)) ;
+            output.append(std::to_string(column));
             
             break;
     }

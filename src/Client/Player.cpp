@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #include <iostream>
 
 #include "../../include/Client/Player.h"

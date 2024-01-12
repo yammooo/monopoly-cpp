@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #include "../../include/Engine/GameRepository.h"
 
 using namespace object_models;
