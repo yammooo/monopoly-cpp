@@ -36,7 +36,6 @@ void build_services()
     ServiceProvider::register_service<GameProcessor>();
     ServiceProvider::register_service<GameContext>();
     ServiceProvider::register_service<GameClient>();
-    ServiceProvider::register_service<GameLogger>(std::vector<std::ostream*> {&(std::cout)});
 }
 
 int main(int argc, char** argv)

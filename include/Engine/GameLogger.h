@@ -13,27 +13,15 @@ namespace engine
 	{
 		private:
 
-		std::vector<std::ostream*> _streams;
 		std::vector<std::string> _strings;
 
 		public:
-		
-		GameLogger(std::vector<std::ostream*> streams) { _streams = streams; }
+
 		GameLogger() {}
 
 		void log_action (const std::string& str) { _strings.push_back(str); }
 
-		std::string log_to_string() const
-		{
-			std::string result = "";
-
-			for (auto str : _strings)
-			{
-				result += str + "\n";
-			}
-
-			return result;
-		}
+		std::string log_to_string() const;
 
 	};
 }

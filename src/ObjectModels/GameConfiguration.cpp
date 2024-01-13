@@ -1,3 +1,5 @@
+// Author: Gianmaria Frigo
+
 #include <random>
 #include <algorithm>
 #include <stdexcept>
@@ -11,9 +13,9 @@ using namespace std;
 std::string tile_index_to_name(int index, int dimension);
 
 GameConfiguration GameConfiguration::_default = GameConfiguration(
-	8,
-	10,
-	6,
+	8,      // Cheap tiles
+	10,     // Standard tiles
+	6,      // Luxury tiles
 	
 	// Create the payment action map
 	map<PaymentAction, map<TileCategory, int>> {
@@ -43,10 +45,11 @@ GameConfiguration GameConfiguration::_default = GameConfiguration(
 			{ TileCategory::Luxury, 14 }
 		}}
 	},
-	100,
-	100,
-	20,
-	4
+
+	100,    // Max round
+	100,    // Initial balance
+	20,     // Start prize
+	4       // Player number
 );
 
 GameConfiguration GameConfiguration::get_default()
@@ -55,77 +58,79 @@ GameConfiguration GameConfiguration::get_default()
 }
 
 GameConfiguration::GameConfiguration(vector<Tile> tiles, map<PaymentAction, map<TileCategory, int>> prices, int maxRound, int initialBalance, int startPrize, int playerNumber)
+    : _tiles{tiles},
+    _prices{prices},
+    _maxRound{maxRound},
+    _initialBalance{initialBalance},
+    _startPrize{startPrize},
+    _playerNumber{playerNumber}
 {
-    _tiles = tiles;
-    _prices = prices;
-    _maxRound = maxRound;
-    _initialBalance = initialBalance;
-    _startPrize = startPrize;
-    _playerNumber = playerNumber;
 }
 
-GameConfiguration::GameConfiguration(int cheapTilesNumber,
-                                    int standardTilesNumber,
-                                    int luxuryTilesNumber,
-                                    std::map<object_models::PaymentAction, std::map<object_models::TileCategory, int>> prices,
-                                    int maxRound,
-                                    int initialBalance,
-                                    int startPrize,
-                                    int playerNumber
-                                    )
+GameConfiguration::GameConfiguration(int cheapTilesNumber, int standardTilesNumber, int luxuryTilesNumber, std::map<object_models::PaymentAction, std::map<object_models::TileCategory, int>> prices, int maxRound, int initialBalance, int startPrize, int playerNumber)
+    : _prices(prices),
+    _maxRound(maxRound),
+    _initialBalance(initialBalance),
+    _startPrize(startPrize),
+    _playerNumber(playerNumber)
 {	
+    // Checks if the total number of tiles forms a square board
 	if ((cheapTilesNumber + standardTilesNumber + luxuryTilesNumber + 4) % 4 != 0)
 	{
 		throw std::invalid_argument("The game configuration is invalid. The board must be a square.");
 	}
-	
-    _prices = prices;
-    _maxRound = maxRound;
-    _initialBalance = initialBalance;
-    _startPrize = startPrize;
-    _playerNumber = playerNumber;
 
 	std::random_device device;
     std::mt19937 rng(device());
 
-	int tile_size = cheapTilesNumber + standardTilesNumber + luxuryTilesNumber + 4;
+	int total_tile_size = cheapTilesNumber + standardTilesNumber + luxuryTilesNumber + 4;
 
+    // Create the cheap tiles
     for (int i = 0; i < cheapTilesNumber; i++)
 	{
 		_tiles.push_back(Tile(TileCategory::Cheap, TileHousing::Land));
 	}
 
+    // Create the standard tile
     for (int i = 0; i < standardTilesNumber; i++)
 	{
 		_tiles.push_back(Tile(TileCategory::Standard, TileHousing::Land));
 	}
 
+    // Create the luxury tiles
     for (int i = 0; i < luxuryTilesNumber; i++)
 	{
 		_tiles.push_back(Tile(TileCategory::Luxury, TileHousing::Land));
 	}
 
+    // Shuffle the tiles to randomize their order
 	std::shuffle(_tiles.begin(), _tiles.end(), rng);
 
+    // Insert the corner tiles at the correct positions
 	_tiles.insert(_tiles.begin(), Tile(TileCategory::Start, TileHousing::Undefined));
-    _tiles.insert(_tiles.begin() + tile_size / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
-    _tiles.insert(_tiles.begin() + tile_size / 2, Tile(TileCategory::Corner, TileHousing::Undefined));
-    _tiles.insert(_tiles.begin() + 3 * tile_size / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
+    _tiles.insert(_tiles.begin() + total_tile_size / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
+    _tiles.insert(_tiles.begin() + total_tile_size / 2, Tile(TileCategory::Corner, TileHousing::Undefined));
+    _tiles.insert(_tiles.begin() + 3 * total_tile_size / 4, Tile(TileCategory::Corner, TileHousing::Undefined));
 
+    // Assign the correct position and name to each tile
 	for (int i = 0; i < _tiles.size(); i++)
 	{	
 		_tiles[i].position(i);
-		_tiles[i].name(tile_index_to_name(i, (tile_size/4)+1));
+		_tiles[i].name(tile_index_to_name(i, (total_tile_size/4)+1));
 	}
 
 }
 
+// Function to convert a tile index to a name based on its position on the board
 std::string tile_index_to_name(int index, int dimension) {
     
-    // dimension is the lenght of the side of the board
+    // Dimension is the length of the side of the board
     
-    int part_of_vector = index/(dimension-1);  // side of the board 
-    int pos_of_part = index%(dimension-1); // position on that side
+    // Determine which side of the board the tile is on
+    int part_of_vector = index/(dimension-1);
+
+    // Determine the position of the tile on that side
+    int pos_of_part = index%(dimension-1);
     
     char row;
     int column;
@@ -133,7 +138,7 @@ std::string tile_index_to_name(int index, int dimension) {
     
     switch(part_of_vector)
     {
-        case 0:                           // --> the south side (H2 to H8 in a 8x8 board)
+        case 0:                           // South side (H2 to H8 on an 8x8 board)
             row = 'A' + (dimension-1);
             output.append(1,row) ;
 
@@ -143,7 +148,7 @@ std::string tile_index_to_name(int index, int dimension) {
             
             break;
 
-        case 1:                          // --> the west side (B1 to H1 in a 8x8 board)
+        case 1:                          // West side (B1 to H1 on an 8x8 board)
             row = 'A'+ (dimension -1 -(pos_of_part));
             output.append(1,row) ;
 
@@ -153,7 +158,7 @@ std::string tile_index_to_name(int index, int dimension) {
             break;
 
 
-        case 2:                         // --> the north side (A1 to A7 in a 8x8 board)
+        case 2:                         // North side (A1 to A7 on an 8x8 board)
             row = 'A';
             output.append(1,row) ;
 
@@ -162,7 +167,7 @@ std::string tile_index_to_name(int index, int dimension) {
             
             break;
 
-        case 3:                         // --> the east side (A8 to G8 in a 8x8 board)
+        case 3:                         // East side (e.g., A8 to G8 on an 8x8 board)
             row = 'A' +(pos_of_part);
             output.append(1, row) ;
 

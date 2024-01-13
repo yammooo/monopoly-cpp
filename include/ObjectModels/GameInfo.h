@@ -11,6 +11,7 @@
 
 namespace object_models
 {
+    // The GameInfo class contains all the information about a game necessary for the client to play
     class GameInfo
     {
         private:
@@ -23,8 +24,14 @@ namespace object_models
             int _playerNumber;
             object_models::TurnManager _playerTurns;
             int _winner;
+
+            // A string representation of the game board
             std::string _board_string;
+
+            // A string representation of the players' properties
             std::string _players_properties_string;
+
+            // A string representation of all players' coins
             std::string _players_coins_string;
 
             engine::GameLogger _logger;

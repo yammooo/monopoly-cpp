@@ -15,23 +15,24 @@ GameData::GameData(int id, GameConfiguration configuration)
 
     for (int i = 0; i < configuration.player_number(); i++)
     {
+        // Create a new player with the index as the player's ID, positioned at the start tile,
+        // and with the initial balance specified in the configuration
         players.push_back(PlayerData(i, 0, configuration.initial_balance()));
     }
 
     _board = GameBoard(configuration.tiles(), players);
-
-    // TODO: Add board configured as configuration says :)
 }
 
 std::string object_models::GameData::board_to_string()
 {
     const int board_size = _configuration.board_size()/4 + 1;
 
+    // Matrix representing the board
     std::vector<std::vector<std::string>> board_matrix(board_size, std::vector<std::string>(board_size));
 
     int vector_index = 0;
 
-    // fill last row excluding last column
+    // Fill last row excluding last column
     for (int column = board_size - 1; column > 0; column--)
     {
         int row = board_size - 1;
@@ -39,7 +40,7 @@ std::string object_models::GameData::board_to_string()
         vector_index++;
     }
 
-    // fill first column excluding last row
+    // Fill first column excluding last row
     for (int row = board_size - 1; row > 0; row--)
     {
         int column = 0;
@@ -47,7 +48,7 @@ std::string object_models::GameData::board_to_string()
         vector_index++;
     }
 
-    // fill first row excluding first column
+    // Fill first row excluding first column
     for (int column = 0; column < board_size - 1; column++)
     {
         int row = 0;
@@ -55,7 +56,7 @@ std::string object_models::GameData::board_to_string()
         vector_index++;
     }
 
-    // fill last column excluding first row
+    // Fill last column excluding first row
     for (int row = 0; row < board_size - 1; row++)
     {
         int column = board_size - 1;
@@ -63,7 +64,7 @@ std::string object_models::GameData::board_to_string()
         vector_index++;
     }
 
-    // fill center
+    // Fill center
     for (int row = 1; row < board_size - 2; row++)
     {
         for (int column = 1; column < board_size - 2; column++)
@@ -76,6 +77,7 @@ std::string object_models::GameData::board_to_string()
 
     for (int row = -1; row < board_size; row++)
     {   
+        // If the row index is -1, it means we are at the row used for column headers (1, 2, 3, ...)
         if (row == -1)
         {   
             output.append("\t");
@@ -90,6 +92,7 @@ std::string object_models::GameData::board_to_string()
         {
             for (int column = -1; column < board_size; column++)
             {
+                // If the column index is -1, it means we are at the column used for row headers (A, B, C, ...)
                 if (column == -1)
                 {   
                     output.append(1,('A' + row));
@@ -120,7 +123,8 @@ std::string object_models::GameData::players_properties_to_string()
 
         int property_count = 0;
 
-        for (int tile_number = 0; tile_number < _board.get_tile_number(); tile_number++)
+        // Loop over each tile on the game board to find the ones owned by the current player
+        for (int tile_number = 0; tile_number < _board.board_size(); tile_number++)
         {
             if (_board.tile(tile_number).owner_id() == player_number)
             {
@@ -138,7 +142,7 @@ std::string object_models::GameData::players_properties_to_string()
 
 std::string object_models::GameData::players_coins_to_string()
 {
-        std::string output;
+    std::string output;
 
     for (int player_number = 0; player_number < _board.get_player_number(); player_number++)
     {
