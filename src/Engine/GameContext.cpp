@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #include <memory>
 
 #include "../../include/Engine/GameContext.h"

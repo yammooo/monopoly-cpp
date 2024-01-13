@@ -8,23 +8,28 @@
 
 namespace object_models
 {
+	// The TurnManager class is responsible for managing the order of turns in the game.
 	class TurnManager
 	{
 		private:
 
-		std::queue<int> _playerTurns;
+			// Queue of player turns. Each entry is the index of a player.
+			std::queue<int> _playerTurns;
 
 		public:
 
-		TurnManager() {};
+			TurnManager() {};
 
-		explicit TurnManager(std::vector<int> turns);
+			// Constructor that initializes the TurnManager with a vector representing the order player turns.
+			explicit TurnManager(std::vector<int> turns);
 
-		void remove_player(int player_index);
+			// Removes the player at the given index from the queue.
+			void remove_player(int player_index);
 
-		void next_turn();
+			// Used to advance the turn to the next player.
+			void next_turn();
 
-		int get_current_player_index();
+			int get_current_player_index();
 	};
 }
 

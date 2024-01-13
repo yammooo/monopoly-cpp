@@ -102,7 +102,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     // Generate a random dice result
     auto dice_result = random->get_next(1, 6) + random->get_next(1, 6);
 
-    _logger.log_action("- Giocatore " + std::to_string(player_index) + " ha tirato i dadi ottenendo un valore di " + std::to_string(dice_result));
+    _logger.log_action("- Giocatore " + std::to_string(player_index + 1) + " ha tirato i dadi ottenendo un valore di " + std::to_string(dice_result));
 
     // Calculate the new position based on the dice result
     auto old_position = game->board()->player(player_index)->position();
@@ -112,7 +112,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     auto tile = game->board()->tile(new_position);
     auto tile_category = tile.category();
 
-    _logger.log_action("- Giocatore " + std::to_string(player_index) + " è arrivato alla casella " + tile.name());
+    _logger.log_action("- Giocatore " + std::to_string(player_index + 1) + " è arrivato alla casella " + tile.name());
 
     // Update the player's position
     game->board()->player(player_index)->position(new_position);
@@ -124,7 +124,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         auto start_prize = game->configuration().start_prize();
         game->board()->player(player_index)->credit(start_prize);
 
-        _logger.log_action("- Giocatore " + std::to_string(player_index) + " è passato dal via e ha ritirato " + std::to_string(start_prize) + " fiorini");
+        _logger.log_action("- Giocatore " + std::to_string(player_index + 1) + " è passato dal via e ha ritirato " + std::to_string(start_prize) + " fiorini");
     }
 
     if (tile_category == TileCategory::Corner || tile_category == TileCategory::Start)
@@ -203,11 +203,11 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                 {
                     game->board()->remove_player(player_index);
 
-                    _logger.log_action("- Giocatore "+std::to_string(player_index)+" é stato eliminato");
+                    _logger.log_action("- Giocatore "+std::to_string(player_index + 1)+" é stato eliminato");
 
                     if(is_game_ended(game))
                     {
-                        _logger.log_action("- Giocatore "+ std::to_string(winner_index(game))+" ha vinto la partita ");
+                        _logger.log_action("- Giocatore "+ std::to_string(winner_index(game) + 1)+" ha vinto la partita ");
                         game->board()->state(GameState::Ended);
                         return GameInfo(*game, _logger);
                     }
@@ -223,7 +223,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
                     }
                 }
                 else{
-                    _logger.log_action("- Giocatore "+ std::to_string(player_index)+" ha pagato "+ std::to_string(payment)+" al giocatore "+ std::to_string(tile.owner_id())+ " per pernottamento nella casella " + tile.name()) ;
+                    _logger.log_action("- Giocatore "+ std::to_string(player_index + 1)+" ha pagato "+ std::to_string(payment)+" al giocatore "+ std::to_string(tile.owner_id() + 1)+ " per pernottamento nella casella " + tile.name()) ;
                 }
                 game->board()->next_round();
             }
@@ -281,7 +281,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
                 // Upgrade the land to a house
                 game->board()->tile(player_position).housing(TileHousing::House);
 
-                _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha costruito una casa sul terreno " + tile.name());
+                _logger.log_action("- Giocatore "+ std::to_string(player_index + 1)+ " ha costruito una casa sul terreno " + tile.name());
 
             } else {
                 // If the player is not the owner of the land it buys the land
@@ -291,7 +291,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
                 // Set the player as the owner of the land
                 game->board()->tile(player_position).set_property(player_index);
 
-                _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha acquistato il terreno " + tile.name());
+                _logger.log_action("- Giocatore "+ std::to_string(player_index + 1)+ " ha acquistato il terreno " + tile.name());
                 
             }
             break;
@@ -305,7 +305,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
             // Upgrade the house to a hotel
             game->board()->tile(player_position).housing(TileHousing::Hotel);
 
-            _logger.log_action("- Giocatore "+ std::to_string(player_index)+ " ha migliorato una casa in albergo sul terreno " + tile.name());
+            _logger.log_action("- Giocatore "+ std::to_string(player_index + 1)+ " ha migliorato una casa in albergo sul terreno " + tile.name());
             break;
         }
         default:

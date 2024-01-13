@@ -1,3 +1,5 @@
+// Author: Gianmaria Frigo
+
 #include "../../include/ObjectModels/TurnManager.h"
 
 using namespace object_models;

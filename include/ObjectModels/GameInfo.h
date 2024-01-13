@@ -26,13 +26,13 @@ namespace object_models
             int _winner;
 
             // A string representation of the game board
-            std::string _board_string;
+            std::string _boardString;
 
             // A string representation of the players' properties
-            std::string _players_properties_string;
+            std::string _playersPropertiesString;
 
             // A string representation of all players' coins
-            std::string _players_coins_string;
+            std::string _playersCoinsString;
 
             engine::GameLogger _logger;
 
@@ -44,9 +44,9 @@ namespace object_models
             std::string log_to_string() const { return _logger.log_to_string(); }
             object_models::TurnManager player_turns() { return _playerTurns; }
 
-            std::string board_string() const { return _board_string; }
-            std::string players_properties_string() const { return _players_properties_string; }
-            std::string players_coins_string() const { return _players_coins_string; }
+            std::string board_string() const { return _boardString; }
+            std::string players_properties_string() const { return _playersPropertiesString; }
+            std::string players_coins_string() const { return _playersCoinsString; }
 
             int winner() const { return _winner; }
 

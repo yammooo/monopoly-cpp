@@ -1,3 +1,5 @@
+// Author: Gianmaria Frigo
+
 #include <exception>
 #include <ostream>
 
@@ -118,7 +120,7 @@ std::string object_models::GameData::players_properties_to_string()
     for (int player_number = 0; player_number < _board.get_player_number(); player_number++)
     {
         output.append("Giocatore ");
-        output.append(std::to_string(player_number));
+        output.append(std::to_string(player_number + 1));
         output.append(": ");
 
         int property_count = 0;
@@ -148,8 +150,8 @@ std::string object_models::GameData::players_coins_to_string()
     {
         int player_coins = _board.player(player_number)->coins();
 
-        output.append("Disponibilità Giocatore ");
-        output.append(std::to_string(player_number));
+        output.append("Giocatore ");
+        output.append(std::to_string(player_number + 1));
         output.append(": ");
 
         if(player_coins >= 0)
@@ -210,7 +212,7 @@ std::string object_models::GameData::tile_to_string(Tile tile, int tile_index)
     {
         if ((_board.player(i)->position() == tile_index) && (_board.player(i)->is_in_game()))
         {
-            output.append(std::to_string(i));
+            output.append(std::to_string(i + 1));
         }
     }
 

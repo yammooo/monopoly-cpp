@@ -26,15 +26,15 @@ ActionInfo Player::get_action(GameInfo info)
 		{
 			if (state == GameState::PlayerBuyLand)
 			{
-				cout << "- Giocatore " << player_index << ": Vuoi comprare il terreno? (S/N/show)" << endl;
+				cout << "- Giocatore " << player_index + 1 << ": Vuoi comprare il terreno? (S/N/show)" << endl;
 			}
 			else if (state == GameState::PlayerBuyHouse)
 			{
-				cout << "- Giocatore " << player_index << ": Vuoi comprare la casa? (S/N/show)" << endl;
+				cout << "- Giocatore " << player_index + 1 << ": Vuoi comprare la casa? (S/N/show)" << endl;
 			}
 			else if (state == GameState::PlayerBuyHotel)
 			{
-				cout << "- Giocatore " << player_index << ": Vuoi comprare l'hotel? (S/N/show)" << endl;
+				cout << "- Giocatore " << player_index + 1 << ": Vuoi comprare l'hotel? (S/N/show)" << endl;
 			}
 
 			cin >> answer;
@@ -48,9 +48,14 @@ ActionInfo Player::get_action(GameInfo info)
 				return ActionInfo(ActionType::DenyPayment);
 			}
 			else if (answer == "show")
-			{
+			{	
+				cout << endl << "Tabellone:" << endl;
 				cout << info.board_string() << endl;
+
+				cout << "Proprietà possedute dai giocatori:" << endl;
 				cout << info.players_properties_string() << endl;
+
+				cout << "Fiorini posseduti dai giocatori:" << endl;
 				cout << info.players_coins_string() << endl;
 			}
 

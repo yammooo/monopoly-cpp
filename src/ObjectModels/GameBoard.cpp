@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #include "../../include/ObjectModels/GameBoard.h"
 
 using namespace object_models;

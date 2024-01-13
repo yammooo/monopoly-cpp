@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #include <iostream>
 #include <memory>
 #include <typeinfo>

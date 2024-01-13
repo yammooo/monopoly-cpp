@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #include "../include/Client/Bot.h"
 
 using namespace object_models;

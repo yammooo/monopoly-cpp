@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #include "../../include/ObjectModels/Tile.h"
 
 object_models::Tile::Tile(TileCategory category, TileHousing housing)

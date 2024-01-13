@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #include "../../include/Engine/RandomContext.h"
 
 engine::RandomContext::RandomContext()

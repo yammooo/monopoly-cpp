@@ -1,3 +1,5 @@
+// Author: Martina Naldoni
+
 #include "../../include/Engine/GameLogger.h"
 
 using namespace engine;

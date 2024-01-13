@@ -1,3 +1,5 @@
+// Author: Luca Bonaldo
+
 #include <stdexcept>
 
 #include "../../include/ObjectModels/PlayerData.h"

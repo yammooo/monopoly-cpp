@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# Log file
+log.txt
+
 .vs/
 .vscode/
 build/
