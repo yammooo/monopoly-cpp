@@ -8,11 +8,19 @@
 
 namespace interfaces
 {
+	/// <summary>
+	/// Interfaces that specifies the signature of a player
+	/// </summary>
 	class IPlayer
 	{
 	private:
 	public:
 
+		/// <summary>
+		/// Get the action to perform from the player
+		/// </summary>
+		/// <param name="info">The game info</param>
+		/// <returns>The action chosen</returns>
 		virtual object_models::ActionInfo get_action(object_models::GameInfo info) = 0;
 	};
 }

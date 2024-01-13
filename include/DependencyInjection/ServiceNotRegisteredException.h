@@ -7,6 +7,9 @@
 
 namespace dependency_injection
 {
+    /// <summary>
+    /// Exception thrown when a service is not registered
+    /// </summary>
     class ServiceNotRegisteredException : public std::exception
     {
         public:

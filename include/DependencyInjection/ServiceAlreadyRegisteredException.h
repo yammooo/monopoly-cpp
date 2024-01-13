@@ -7,6 +7,9 @@
 
 namespace dependency_injection
 {
+    /// <summary>
+    /// Exception thrown when a service is already registered
+    /// </summary>
     class ServiceAlreadyRegisteredException : public std::exception
     {
         public:

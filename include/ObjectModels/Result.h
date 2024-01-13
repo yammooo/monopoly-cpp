@@ -7,6 +7,10 @@
 
 namespace object_models
 {
+    /// <summary>
+    /// Class that can hold a valid value or an error
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     template <typename T>
     class Result
     {
@@ -24,14 +28,34 @@ namespace object_models
 
         public:
 
+        /// <summary>
+        /// Returns a Result<T> that is a error with given message
+        /// </summary>
+        /// <param name="message">The message of the error</param>
+        /// <returns>The result containing the error</returns>
         static Result<T> Error(std::string message);
+
+        /// <summary>
+        /// Returns a Result<T> that is ok with given value
+        /// </summary>
+        /// <param name="value">The value containeds</param>
+        /// <returns>The result</returns>
         static Result<T> Ok(T value);
 
+        /// <summary>
+        /// Gets the value contained if the object is not an error
+        /// </summary>
         T value();
+
+        /// <summary>
+        /// Returns the error if the object is error
+        /// </summary>
         std::string error();
 
+        /// <summary>
+        /// True if error; false otherwise
+        /// </summary>
         bool isError();
-
     };
     
     template <typename T>

@@ -23,9 +23,20 @@ namespace dependency_injection
 
         public:
         
+        /// <summary>
+        /// Register a service to the dependency injection pool
+        /// </summary>
+        /// <typeparam name="T">The type of the service to register</typeparam>
+        /// <typeparam name="...Args">The argument types needed to be passed to the service constructor</typeparam>
+        /// <param name="...args">The arguments needed to be passed to the service constructor</param>
         template <class T, class... Args>
         static void register_service(Args&&... args);
 
+        /// <summary>
+        /// Return a registered and configured service from the pool
+        /// </summary>
+        /// <typeparam name="T">The type of the service to return</typeparam>
+        /// <returns>The configured service</returns>
         template <class T>
         static T* get_service();
     };
