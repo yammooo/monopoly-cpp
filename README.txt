@@ -1,11 +1,11 @@
-Nella realizzazione del progetto sono stati tenuti bene a mente i più importanti aspetti della programmazione ad oggetti.
+Durante la realizzazione del progetto, sono stati presi in considerazione i principali aspetti della programmazione ad oggetti.
 
-Ogni classe infatti è stata resa tale per cui vada a ricoprire una ed una sola funzione, mantenendo una ed una sola responsabilità.
+Ogni classe è stata progettata per svolgere una singola funzione e mantenere una sola responsabilità.
 
-L'architettura segue i miglior design pattern, tra i quali un'implementazione molto basilare del pattern di dependency injection. Questo per snellire il codice, nonché mostrare le potenzialità della gestione dinamica della memoria in C++.
+L'architettura segue i migliori design pattern, inclusa un'implementazione di base del pattern di dependency injection. Ciò permette di semplificare il codice e mostrare le potenzialità della gestione dinamica della memoria in C++.
 
-Per rendere più interessante il progetto si è inoltre scelto di adottare un'architettura simile a quella che si avrebbe per un servizio web. Infatti si è diviso nettamente quello che sarebbe il server, ossia l'engine secondo la nomenclatura da noi adottata, con quello che è il client.
+Per rendere il progetto più interessante, è stata adottata un'architettura simile a quella di un servizio web. Sono state nettamente separate le parti del server (chiamato "engine" nel nostro caso) e del client.
 
-Per quanto concerne l'ereditarietà, si è preferito tenerla al minimo in quanto non esattamente funzionale al metodo risolutivo adottato. Non mancano però esempi di ereditarietà di interfaccie.
+Per quanto riguarda l'ereditarietà, è stata mantenuta al minimo, poiché non è strettamente necessaria per il metodo risolutivo adottato. Tuttavia, sono presenti esempi di ereditarietà di interfacce.
 
-La gestione inoltre degli errori è stata resa facile dall'uso della monade Result<T>. Infatti le eccezioni vengono raccolte a livello di GameContext, ritornando così al client un Result<T> contenente un errore.
+La gestione degli errori è stata semplificata grazie all'uso della monade Result<T>. Le eccezioni vengono raccolte a livello di GameContext e restituite al client come un Result<T> contenente un errore.
