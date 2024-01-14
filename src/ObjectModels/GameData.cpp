@@ -165,6 +165,19 @@ std::string object_models::GameData::players_coins_to_string()
     return output;
 }
 
+std::vector<int> object_models::GameData::players_coins_to_vector()
+{
+    std::vector<int> playerCoins;
+
+    for (int player_number = 0; player_number < _board.get_player_number(); player_number++)
+    {
+        int player_coins = _board.player(player_number)->coins();
+        playerCoins.push_back(player_coins);
+    }
+
+    return playerCoins;
+}
+
 std::string object_models::GameData::tile_to_string(Tile tile, int tile_index)
 {
     std::string output;

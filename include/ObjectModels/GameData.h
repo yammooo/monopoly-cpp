@@ -40,6 +40,9 @@ namespace object_models
         // Outputs a string containing all the players' coins
         std::string players_coins_to_string();
 
+        // Outputs a vector containing all the players' coins
+        std::vector<int> players_coins_to_vector();
+
         std::string tile_to_string(Tile tile, int tile_index);
     };
 }

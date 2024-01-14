@@ -17,7 +17,8 @@ object_models::GameInfo::GameInfo(object_models::GameData game, engine::GameLogg
     _logger{logger},
     _boardString{game.board_to_string()},
     _playersPropertiesString{game.players_properties_to_string()},
-    _playersCoinsString{game.players_coins_to_string()}
+    _playersCoinsString{game.players_coins_to_string()},
+    _playersCoinsVector{game.players_coins_to_vector()}
 {
 }
 
@@ -30,6 +31,7 @@ object_models::GameInfo::GameInfo(object_models::GameData game)
     _winner{game.board()->winner()},
     _boardString{game.board_to_string()},
     _playersPropertiesString{game.players_properties_to_string()},
-    _playersCoinsString{game.players_coins_to_string()}
+    _playersCoinsString{game.players_coins_to_string()},
+    _playersCoinsVector{game.players_coins_to_vector()}
 {
 }

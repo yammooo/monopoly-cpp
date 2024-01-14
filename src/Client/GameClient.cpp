@@ -60,7 +60,42 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
 
     if (info.round() >= _configuration.max_round())
     {
-        std::cout << "The game ended because the maximum round limit was reached." << std::endl;
+        std::cout << "Il gioco è terminato perchè è stato raggiutno il numero massimo di turni." << std::endl;
+
+        // Get the coins of each player
+        std::vector<int> playerCoins = info.players_coins_vector();
+
+        // Find the maximum number of coins
+        int maxCoins = *std::max_element(playerCoins.begin(), playerCoins.end());
+
+        // Find the players with the maximum number of coins
+        std::vector<int> winners;
+        for (int i = 0; i < playerCoins.size(); i++)
+        {
+            if (playerCoins[i] == maxCoins)
+            {
+                winners.push_back(i);
+            }
+        }
+
+        // Print the winners
+        if (winners.size() == 1)
+        {
+            std::cout << "Giocatore " << winners[0] + 1 << " vince con " << maxCoins << " fiorini." << std::endl;
+        }
+        else
+        {
+            std::cout << "Vittoria ex-equo per i giocatori ";
+            for (int i = 0; i < winners.size(); i++)
+            {
+                std::cout << winners[i] + 1;
+                if (i != winners.size() - 1)
+                {
+                    std::cout << ", ";
+                }
+            }
+            std::cout << ", ciascuno con " << maxCoins << " fiorini." << std::endl;
+        }
     }
 
     log_file.close();

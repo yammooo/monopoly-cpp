@@ -34,6 +34,9 @@ namespace object_models
             // A string representation of all players' coins
             std::string _playersCoinsString;
 
+            // A vector representation of all players' coins
+            std::vector<int> _playersCoinsVector;
+
             engine::GameLogger _logger;
 
         public:
@@ -47,6 +50,7 @@ namespace object_models
             std::string board_string() const { return _boardString; }
             std::string players_properties_string() const { return _playersPropertiesString; }
             std::string players_coins_string() const { return _playersCoinsString; }
+            std::vector<int> players_coins_vector() const { return _playersCoinsVector; }
 
             int winner() const { return _winner; }
 
