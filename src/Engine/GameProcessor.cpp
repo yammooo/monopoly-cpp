@@ -15,7 +15,7 @@ std::vector<int> find_keys_with_duplicate_values(const std::map<int, int>& input
     // Map that stores the values from the input map as keys
     std::unordered_map<int, std::vector<int>> valueToKeysMap;
 
-    for (const auto& pair : inputMap)
+    for (const std::pair<const int, int>& pair : inputMap)
     {
         valueToKeysMap[pair.second].push_back(pair.first);
     }
@@ -23,7 +23,7 @@ std::vector<int> find_keys_with_duplicate_values(const std::map<int, int>& input
     std::vector<int> output;
 
     // Find keys with duplicate values
-    for (const auto& pair : valueToKeysMap)
+    for (const std::pair<const int, std::vector<int>>& pair : valueToKeysMap)
     {
         // If more than one key has the same value, add them to the output vector
         if (pair.second.size() > 1)
@@ -42,12 +42,12 @@ std::vector<int> get_keys_sorted_by_values(const std::map<int, int>& inputMap)
 
     std::multimap<int, int> valueToKeyMap;
 
-    for (const auto& pair : inputMap)
+    for (const std::pair<const int, int>& pair : inputMap)
     {
         valueToKeyMap.insert({pair.second, pair.first});
     }
 
-    for (const auto& pair : valueToKeyMap)
+    for (const std::pair<const int, int>& pair : valueToKeyMap)
     {
         keys.push_back(pair.second);
     }
@@ -94,23 +94,23 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         throw std::invalid_argument("Expected ThrowDice action type in GameProcessor::process_player_dice_throw method");
     }
 
-    auto player_index = game->board()->player_turns().get_current_player_index();
+    int player_index = game->board()->player_turns().get_current_player_index();
 
     // Get the current player's coins
-    auto player_coins = game->board()->player(player_index)->coins();
+    int player_coins = game->board()->player(player_index)->coins();
 
     // Generate a random dice result
-    auto dice_result = random->get_next(1, 6) + random->get_next(1, 6);
+    int dice_result = random->get_next(1, 6) + random->get_next(1, 6);
 
     _logger.log_action("- Giocatore " + std::to_string(player_index + 1) + " ha tirato i dadi ottenendo un valore di " + std::to_string(dice_result));
 
     // Calculate the new position based on the dice result
-    auto old_position = game->board()->player(player_index)->position();
-    auto new_position = (old_position + dice_result) % game->configuration().board_size();
+    int old_position = game->board()->player(player_index)->position();
+    int new_position = (old_position + dice_result) % game->configuration().board_size();
 
     // Get the tile at the new position
-    auto tile = game->board()->tile(new_position);
-    auto tile_category = tile.category();
+    Tile tile = game->board()->tile(new_position);
+    TileCategory tile_category = tile.category();
 
     _logger.log_action("- Giocatore " + std::to_string(player_index + 1) + " è arrivato alla casella " + tile.name());
 
@@ -121,7 +121,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
     if (new_position < old_position)
     {
         // Credit the player with the start prize
-        auto start_prize = game->configuration().start_prize();
+        int start_prize = game->configuration().start_prize();
         game->board()->player(player_index)->credit(start_prize);
 
         _logger.log_action("- Giocatore " + std::to_string(player_index + 1) + " è passato dal via e ha ritirato " + std::to_string(start_prize) + " fiorini");
@@ -137,7 +137,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
         // If the tile is not owned by anyone
         if (tile.owner_id() == -1)
         {
-            auto buy_price = game->configuration().get_prize(PaymentAction::BuyLand, tile_category);
+            int buy_price = game->configuration().get_prize(PaymentAction::BuyLand, tile_category);
             
             // If the player has enough coins
             if (game->board()->player(player_index)->coins() >= buy_price)
@@ -156,7 +156,7 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
             // If the player is the owner of the tile
             if (player_index == tile.owner_id())
             {
-                auto upgrade_cost = game->configuration().get_prize(tile.housing() == TileHousing::Land ? PaymentAction::BuyHouse : PaymentAction::BuyHotel, tile_category);
+                int upgrade_cost = game->configuration().get_prize(tile.housing() == TileHousing::Land ? PaymentAction::BuyHouse : PaymentAction::BuyHotel, tile_category);
                 
                 // Check if the player has enough coins for the upgrade and the current housing is not a Hotel (since a Hotel is the highest upgrade)
                 if ((game->board()->player(player_index)->coins() >= upgrade_cost) && (tile.housing() == TileHousing::House || tile.housing() == TileHousing::Land))
@@ -179,14 +179,14 @@ GameInfo process_player_dice_throw(GameData* game, ActionInfo action, engine::Ra
             else if (tile.housing() == TileHousing::House || tile.housing() == TileHousing::Hotel)
             {   
 
-                auto payment_action = tile.housing() == TileHousing::House ? PaymentAction::HouseStay : PaymentAction::HotelStay;
+                PaymentAction payment_action = tile.housing() == TileHousing::House ? PaymentAction::HouseStay : PaymentAction::HotelStay;
                 
-                auto payment = game->configuration().get_prize(payment_action, tile.category());
+                int payment = game->configuration().get_prize(payment_action, tile.category());
 
                 // Debit the rent to the player
                 game->board()->player(player_index)->debit(payment);
 
-                auto player_coins = game->board()->player(player_index)->coins();
+                int player_coins = game->board()->player(player_index)->coins();
 
 
                 if (player_coins < 0)
@@ -247,7 +247,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 {   
     GameLogger _logger;
 
-    auto player_index = game->board()->player_turns().get_current_player_index();
+    int player_index = game->board()->player_turns().get_current_player_index();
     
 
     if (action.type() != ActionType::AcceptPayment && action.type() != ActionType::DenyPayment)
@@ -264,8 +264,8 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
         return GameInfo(*game, _logger);
     }
     
-    auto player_position = game->board()->player(player_index)->position();
-    auto tile = game->board()->tile(player_position);
+    int player_position = game->board()->player(player_index)->position();
+    Tile tile = game->board()->tile(player_position);
 
     // Check the housing type of the tile
     switch (tile.housing())
@@ -275,7 +275,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
             if (tile.owner_id() == player_index)
             {
                 // If the player is the owner of the land it buys a house
-                auto payment = game->configuration().get_prize(PaymentAction::BuyHouse, tile.category());
+                int payment = game->configuration().get_prize(PaymentAction::BuyHouse, tile.category());
                 game->board()->player(player_index)->debit(payment);
 
                 // Upgrade the land to a house
@@ -285,7 +285,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
 
             } else {
                 // If the player is not the owner of the land it buys the land
-                auto payment = game->configuration().get_prize(PaymentAction::BuyLand, tile.category());
+                int payment = game->configuration().get_prize(PaymentAction::BuyLand, tile.category());
                 game->board()->player(player_index)->debit(payment);
                 
                 // Set the player as the owner of the land
@@ -299,7 +299,7 @@ GameInfo process_player_payment(GameData* game, ActionInfo action)
         case TileHousing::House:
         {   
             // If the tile is a house, the player buys a hotel
-            auto payment = game->configuration().get_prize(PaymentAction::BuyHotel, tile.category());
+            int payment = game->configuration().get_prize(PaymentAction::BuyHotel, tile.category());
             game->board()->player(player_index)->debit(payment);
 
             // Upgrade the house to a hotel

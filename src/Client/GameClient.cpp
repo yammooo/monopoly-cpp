@@ -40,7 +40,7 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
         action = _players[player_index]->get_action(info);
 
         // Play the action in the game context and get the updated game info.
-        auto result = _context->play(info.id(), action);
+        Result<GameInfo> result = _context->play(info.id(), action);
 
         // If an error occurred during the action execution, throw a runtime error.
         if (result.isError())

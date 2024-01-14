@@ -9,7 +9,7 @@ TurnManager::TurnManager(vector<int> turns)
 {
     _playerTurns = queue<int>();
 
-    for (auto turn : turns)
+    for (int turn : turns)
     {
         _playerTurns.push(turn);
     }
