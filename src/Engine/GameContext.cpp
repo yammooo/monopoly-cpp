@@ -39,10 +39,8 @@ Result<GameInfo> GameContext::create_game()
     }
     catch(const std::exception& e)
     {
-        // TODO: Log exception
+        return Result<GameInfo>::Error("Error while creating new game");
     }
-     
-    return Result<GameInfo>::Error("Error while creating new game");
 }
 
 Result<GameInfo> GameContext::create_game(GameConfiguration configuration)
@@ -59,10 +57,8 @@ Result<GameInfo> GameContext::create_game(GameConfiguration configuration)
     }
     catch (const std::exception& e)
     {
-        // TODO: Log exception
+        return Result<GameInfo>::Error("Error while creating new game");
     }
-
-    return Result<GameInfo>::Error("Error while creating new game");
 }
 
 Result<GameInfo> GameContext::play(int id, ActionInfo info)
@@ -79,8 +75,6 @@ Result<GameInfo> GameContext::play(int id, ActionInfo info)
     }
     catch(const std::exception& e)
     {
-        // TODO: Log exception
+        return Result<GameInfo>::Error("Error while performing action on game");
     }
-    
-    return Result<GameInfo>::Error("Error while performing action on game");
 }
