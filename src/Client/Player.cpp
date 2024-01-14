@@ -1,5 +1,9 @@
 // Author: Martina Naldoni
 
+/*
+this file deals with comunications with the human player
+*/
+
 #include <iostream>
 
 #include "../../include/Client/Player.h"
@@ -60,6 +64,9 @@ ActionInfo Player::get_action(GameInfo info)
 			}
 
 		} while (answer != "S" && answer != "N");
+
+        // we use a do while structure because the player may type show 
+        //multiple times before deciding on an answer
 
     }
 

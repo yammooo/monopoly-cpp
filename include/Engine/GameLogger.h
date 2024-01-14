@@ -1,5 +1,15 @@
 // Author: Martina Naldoni
 
+/*
+Game logger is a class that instantiates the object gamelogger,
+that is a vector of strings that contains every action taken in the game.
+
+It is mainly used in gameprocessor: after the game is updated with the latest move,
+log_action is called, to insert the string version of the move in the game's logger
+
+it only contains the actions required to be printed in the output.
+*/
+
 #ifndef GAME_LOGGER_H
 #define GAME_LOGGER_H
 

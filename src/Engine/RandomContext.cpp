@@ -1,5 +1,7 @@
 // Author: Martina Naldoni
 
+// we use std methods to generate random numbers 
+
 #include "../../include/Engine/RandomContext.h"
 
 engine::RandomContext::RandomContext()

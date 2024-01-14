@@ -5,6 +5,8 @@
 
 #include <random>
 
+// the class responsible for generating random values
+
 namespace engine
 {
     class RandomContext

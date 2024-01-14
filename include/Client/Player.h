@@ -1,5 +1,10 @@
 // Author: Martina Naldoni
 
+
+/*Our class Player instances an object player that 
+with "get_action", once provided with the state of the game, 
+returns the action it takes. 
+*/
 #ifndef PLAYER_H
 #define PLAYER_H
 

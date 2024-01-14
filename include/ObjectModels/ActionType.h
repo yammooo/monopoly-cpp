@@ -8,9 +8,9 @@ namespace object_models
     enum class ActionType
     {
         Undefined = 0,
-        ThrowDice = 2,
-        AcceptPayment = 3,
-        DenyPayment = 4
+        ThrowDice = 1,
+        AcceptPayment = 2,
+        DenyPayment = 3
     };
 }
 

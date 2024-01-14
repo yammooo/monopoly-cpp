@@ -1,5 +1,15 @@
 // Author: Martina Naldoni
 
+/*
+Here is how we decided to represent a tile of the Monopoly board:
+- it has a Category (Luxury, Standar, Cheap, Start, Corner)
+- it has a housing status (Undefined, Land (bare ownership), House, Hotel )
+- it has a name (eg. H6)
+- it has a position (its index in the vactor of tiles that is kept in the gameboard )
+- it has an Owner id (that is -1 when not owned by anyone)
+
+*/
+
 #ifndef TILE_H
 #define TILE_H
 
