@@ -62,13 +62,13 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
     {
         std::cout << "Il gioco è terminato perchè è stato raggiutno il numero massimo di turni." << std::endl;
 
-        // Get the coins of each player
+        // Gets the coins of each player
         std::vector<int> playerCoins = info.players_coins_vector();
 
-        // Find the maximum number of coins
+        // Finds the maximum number of coins
         int maxCoins = *std::max_element(playerCoins.begin(), playerCoins.end());
 
-        // Find the players with the maximum number of coins
+        // Finds the players with the maximum number of coins
         std::vector<int> winners;
         for (int i = 0; i < playerCoins.size(); i++)
         {
@@ -78,7 +78,7 @@ void client::GameClient::execute_inner(object_models::GameInfo info)
             }
         }
 
-        // Print the winners
+        // Prints the winners
         if (winners.size() == 1)
         {
             std::cout << "Giocatore " << winners[0] + 1 << " vince con " << maxCoins << " fiorini." << std::endl;
